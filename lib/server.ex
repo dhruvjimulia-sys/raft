@@ -37,7 +37,8 @@ def next(server) do
 
   # { :VOTE_REPLY, ...
 
-  # { :ELECTION_TIMEOUT, ...
+  { :ELECTION_TIMEOUT, timeout_metadata} ->
+    server |> Vote.stand_for_election(timeout_metadata)
 
   # { :CLIENT_REQUEST, ...
 
