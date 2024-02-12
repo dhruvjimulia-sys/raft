@@ -3,7 +3,13 @@
 # coursework, raft consensus, v2
 
 defmodule Server do
-
+  defp stepdown(server, term) do
+    server
+    |> Map.put(:curr_term, term)
+    |> Map.put(:state, :FOLLOWER)
+    |> Map.put(:voted_for, nil)
+    # incomplete!
+  end
 # _________________________________________________________ Server.start()
 def start(config, server_num) do
 
@@ -31,13 +37,19 @@ def next(server) do
 
   # { :APPEND_ENTRIES_REPLY, ...
 
-  # { :APPEND_ENTRIES_TIMEOUT, ...
+  { :APPEND_ENTRIES_TIMEOUT, } ->
+    if server. = :CANDIDATE do
+      # set hRpcTimeout, qi at now() + vote
+      # send { :VOTE_REQUEST, server.currentTerm}, q
+    end
 
-  # { :VOTE_REQUEST, ...
+  # { :VOTE_REQUEST, term } ->
+    # incomplete!
 
-  # { :VOTE_REPLY, ...
+  # { :VOTE_REPLY, term, vote, q } ->
+    # incomplete!
 
-  { :ELECTION_TIMEOUT, timeout_metadata} ->
+  { :ELECTION_TIMEOUT, timeout_metadata } ->
     server |> Vote.stand_for_election(timeout_metadata)
 
   # { :CLIENT_REQUEST, ...
