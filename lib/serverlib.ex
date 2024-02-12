@@ -14,7 +14,7 @@ def stepdown(server, term) do
   |> Map.put(:curr_term, term)
   |> Map.put(:state, :FOLLOWER)
   |> Map.put(:voted_for, nil)
-  # incomplete!
+  |> Timer.restart_election_timer
 end
 
 def stepdown_if_current_term_outdated(server, term) do
