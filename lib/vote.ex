@@ -12,7 +12,10 @@ defmodule Vote do
     server
   end
 
+  # TODO Replace these functions by corresponding functions in state.ex
+  # TODO why is timeout_metadata.curr_election required? - edstem
   def stand_for_election(server, timeout_metadata) do
+    Debug.assert(server, server.curr_term == timeout_metadata.curr_term, "Server current term must be the same as the one passed in timeout_metadata")
     # timeout_metadata: %{term: server.curr_term, election: server.curr_election}
     case server.role == :LEADER or server.role == :CANDIDATE do
       true ->

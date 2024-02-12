@@ -4,11 +4,6 @@
 
 defmodule ServerLib do
 
-# Library of functions called by other server-side modules
-def set_timeout() do
-
-end
-
 def stepdown(server, term) do
   server
   |> Map.put(:curr_term, term)
