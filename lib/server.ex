@@ -3,13 +3,6 @@
 # coursework, raft consensus, v2
 
 defmodule Server do
-  defp stepdown(server, term) do
-    server
-    |> Map.put(:curr_term, term)
-    |> Map.put(:state, :FOLLOWER)
-    |> Map.put(:voted_for, nil)
-    # incomplete!
-  end
 # _________________________________________________________ Server.start()
 def start(config, server_num) do
 
@@ -37,14 +30,19 @@ def next(server) do
 
   # { :APPEND_ENTRIES_REPLY, ...
 
-  { :APPEND_ENTRIES_TIMEOUT, } ->
-    if server. = :CANDIDATE do
-      # set hRpcTimeout, qi at now() + vote
-      # send { :VOTE_REQUEST, server.currentTerm}, q
+  { :APPEND_ENTRIES_TIMEOUT, append_entries_data } ->
+    # append_entries_data: %{term: server.curr_term, followerP: followerP }
+    if server.role == :CANDIDATE do
+      send append_entries_data.followerP.selfP, { :VOTE_REQUEST, server.currentTerm, server.selfP }
+      Timer.restart_append_entries_timer(server, append_entries_data.followerP)
+    else
+      server
     end
 
-  # { :VOTE_REQUEST, term } ->
-    # incomplete!
+  { :VOTE_REQUEST, term, vote_for_process } ->
+    server
+    |> ServerLib.stepdown_if_current_term_outdated(term)
+    |> ServerLib.vote_for_if_not_already(term, vote_for_process)
 
   # { :VOTE_REPLY, term, vote, q } ->
     # incomplete!
