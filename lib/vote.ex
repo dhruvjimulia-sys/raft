@@ -48,4 +48,22 @@ defmodule Vote do
     send candidate, vote_reply_msg
     server
   end
+
+  def process_vote(server, term, vote, voter) do
+    if term == server.curr_term and server.role == :CANDIDATE do
+      if vote == server.selfP do
+        server |> Map.put(:voted_by, MapSet.put(server.voted_by, voter))
+      end
+      server |> Timer.cancel_append_entries_timer(voter)
+      if vote_tally(server) >= server.majority do
+        server
+        |> Map.put(:role, :LEADER)
+        |> Map.put(:leaderP, server.selfP)
+        for followerP <- server.servers, followerP != server.selfP do
+          server |> ServerLib.send_append_entries(followerP)
+        end
+      end
+    end
+  server
+  end
 end # Vote

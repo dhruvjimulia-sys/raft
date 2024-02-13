@@ -20,4 +20,14 @@ def stepdown_if_current_term_outdated(server, term) do
   end
 end
 
+def send_append_entries(server, followerP) do
+  server
+  |> Timer.restart_append_entries_timer(followerP)
+  |> ServerLib.send_append_entries_req(followerP)
+end
+
+def send_append_entries_req(server, followerP) do
+  send followerP, { :APPEND_ENTRIES_REQUEST, server.curr_term, server.selfP }
+end
+
 end # ServerLib

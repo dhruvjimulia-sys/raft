@@ -26,7 +26,13 @@ def next(server) do
 
   server = receive do
 
-  # { :APPEND_ENTRIES_REQUEST, ...
+  { :APPEND_ENTRIES_REQUEST, term, requester } ->
+    server |> ServerLib.stepdown_if_current_term_outdated(term)
+    if term < server.current_term do
+      server |> ServerLib.send_append_entries_req(requester)
+    else
+      server
+    end
 
   # { :APPEND_ENTRIES_REPLY, ...
 
@@ -44,8 +50,10 @@ def next(server) do
     |> ServerLib.stepdown_if_current_term_outdated(term)
     |> Vote.vote_for_if_not_already(term, candidate)
 
-  # { :VOTE_REPLY, term, vote, q } ->
-    # incomplete!
+  { :VOTE_REPLY, term, vote, voter } ->
+    server
+    |> ServerLib.stepdown_if_current_term_outdated(term)
+    |> Vote.process_vote(term, vote, voter)
 
   { :ELECTION_TIMEOUT, timeout_metadata } ->
     server |> Vote.stand_for_election(timeout_metadata)
