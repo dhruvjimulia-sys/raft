@@ -42,7 +42,7 @@ def next(server) do
   { :VOTE_REQUEST, term, candidate } ->
     server
     |> ServerLib.stepdown_if_current_term_outdated(term)
-    |> ServerLib.vote_for_if_not_already(term, candidate)
+    |> Vote.vote_for_if_not_already(term, candidate)
 
   # { :VOTE_REPLY, term, vote, q } ->
     # incomplete!
