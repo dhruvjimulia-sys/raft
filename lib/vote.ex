@@ -17,17 +17,16 @@ defmodule Vote do
   def stand_for_election(server, timeout_metadata) do
     Debug.assert(server, server.curr_term == timeout_metadata.curr_term, "Server current term must be the same as the one passed in timeout_metadata")
     # timeout_metadata: %{term: server.curr_term, election: server.curr_election}
-    case server.role == :LEADER or server.role == :CANDIDATE do
-      true ->
-        server
-          |> Timer.restart_election_timer()
-          |> Map.put(:curr_term, server.curr_term + 1)
-          |> Map.put(:role, :CANDIDATE)
-          |> Map.put(:voted_for, self())
-          |> Map.put(:voted_by, MapSet.new([self()]))
-          |> Timer.cancel_all_append_entries_timers
-          |> start_all_append_entries_timers_immediately
-      false ->
+    if server.role == :LEADER or server.role == :CANDIDATE do
+      server
+        |> Timer.restart_election_timer()
+        |> Map.put(:curr_term, server.curr_term + 1)
+        |> Map.put(:role, :CANDIDATE)
+        |> Map.put(:voted_for, self())
+        |> Map.put(:voted_by, MapSet.new([self()]))
+        |> Timer.cancel_all_append_entries_timers
+        |> start_all_append_entries_timers_immediately
+    else
         server
     end
   end
@@ -51,19 +50,12 @@ defmodule Vote do
 
   def process_vote(server, term, vote, voter) do
     if term == server.curr_term and server.role == :CANDIDATE do
-      if vote == server.selfP do
-        server |> Map.put(:voted_by, MapSet.put(server.voted_by, voter))
-      end
-      server |> Timer.cancel_append_entries_timer(voter)
-      if MapSet.size(server.voted_by) >= server.majority do
-        server
-        |> Map.put(:role, :LEADER)
-        |> Map.put(:leaderP, server.selfP)
-        for followerP <- server.servers, followerP != server.selfP do
-          server |> ServerLib.send_append_entries(followerP)
-        end
-      end
+      server
+      |> ServerLib.add_vote_to_voted_by(vote, voter)
+      |> Timer.cancel_append_entries_timer(voter)
+      |> ServerLib.make_current_server_leader_if_recd_majority_votes
+    else
+      server
     end
-  server
   end
 end # Vote
