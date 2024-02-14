@@ -51,9 +51,28 @@ defmodule Vote do
   def process_vote(server, term, vote, voter) do
     if term == server.curr_term and server.role == :CANDIDATE do
       server
-      |> ServerLib.add_vote_to_voted_by(vote, voter)
+      |> Vote.add_vote_to_voted_by(vote, voter)
       |> Timer.cancel_append_entries_timer(voter)
-      |> ServerLib.make_current_server_leader_if_recd_majority_votes
+      |> Vote.make_current_server_leader_if_recd_majority_votes
+    else
+      server
+    end
+  end
+
+  def add_vote_to_voted_by(server, vote, voter) do
+    if vote == server.selfP do
+      server |> Map.put(:voted_by, MapSet.put(server.voted_by, voter))
+    else
+      server
+    end
+  end
+
+  def make_current_server_leader_if_recd_majority_votes(server) do
+    if MapSet.size(server.voted_by) >= server.majority do
+      server
+      |> Map.put(:role, :LEADER)
+      |> Map.put(:leaderP, server.selfP)
+      |> ServerLib.send_append_entries_to_all_servers_except_myself
     else
       server
     end
