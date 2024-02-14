@@ -51,6 +51,10 @@ def received_append_entries_request(server, message, level \\ 1) do
   server |> Debug.message("-areq", message, level)
 end
 
+def received_append_entries_reply(server, message, level \\ 1) do
+  server |> Debug.message("-arep", message, level)
+end
+
 def send_vote_request(server, message, level \\ 1) do
   server |> Debug.message("+vreq", message, level)
 end
@@ -65,6 +69,10 @@ end
 
 def stood_for_election(server, message, level \\ 1) do
   server |> Debug.message("standelec", message, level)
+end
+
+def sent_append_entries(server, message, level \\ 1) do
+  server |> Debug.message("+areq", message, level)
 end
 
 def print(server, message) do

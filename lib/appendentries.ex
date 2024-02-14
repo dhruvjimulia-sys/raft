@@ -4,9 +4,9 @@
 
 defmodule AppendEntries do
 
-  def execute_append_request_and_repond_appropriately(server, term, requester) do
+  def execute_append_request_and_respond_appropriately(server, term, requester) do
     if term < server.curr_term do
-      server |> ServerLib.send_incorrect_append_entries_response(requester)
+      server |> ServerLib.send_incorrect_append_entries_reply(requester)
     else
       # store entries to log if sucessful
       server
@@ -19,10 +19,9 @@ defmodule AppendEntries do
       send append_entries_data.followerP, { :VOTE_REQUEST, server.curr_term, server }
       server
       |> Debug.send_vote_request("Server #{server.server_num} sent vote request")
-      |> Timer.restart_append_entries_timer(append_entries_data.followerP)
+      |> Timer.restart_append_entries_timer(append_entries_data.followerP, server.config.append_entries_timeout)
     else
       server
     end
   end
-
 end # AppendEntries

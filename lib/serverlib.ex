@@ -22,7 +22,8 @@ end
 
 def send_append_entries(server, followerP) do
   server
-  |> Timer.restart_append_entries_timer(followerP)
+  |> Debug.sent_append_entries("Server #{server.server_num} sending append entries")
+  |> Timer.restart_append_entries_timer(followerP, div(server.config.append_entries_timeout, 2))
   |> ServerLib.send_append_entries_req(followerP)
 end
 
@@ -32,9 +33,13 @@ def send_append_entries_req(server, followerP) do
   server
 end
 
-def send_incorrect_append_entries_response(server, requester) do
-  send requester, { :APPEND_ENTRIES_RESPONSE, server.curr_term, false }
+def send_incorrect_append_entries_reply(server, requester) do
+  send requester, { :APPEND_ENTRIES_REPLY, server.curr_term, false }
 end
+
+# def send_correct_append_entries_response(server, requester) do
+#   send requester
+# end
 
 def send_append_entries_to_all_servers_except_myself(server) do
   Enum.reduce(server.servers, server, fn followerP, acc ->

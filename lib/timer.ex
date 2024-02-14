@@ -28,11 +28,11 @@ end # cancel_election_timer
 
 
 # _________________________________________________________ restart_append_entries_timer()
-def restart_append_entries_timer(server, followerP) do
+def restart_append_entries_timer(server, followerP, after_time) do
   server = Timer.cancel_append_entries_timer(server, followerP)
 
   timeout_msg = { :APPEND_ENTRIES_TIMEOUT, %{term: server.curr_term, followerP: followerP }}
-  append_entries_timer = Process.send_after(server.selfP, timeout_msg, server.config.append_entries_timeout)
+  append_entries_timer = Process.send_after(server.selfP, timeout_msg, after_time)
 
   server
   |> State.append_entries_timer(followerP, append_entries_timer)

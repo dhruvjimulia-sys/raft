@@ -27,20 +27,23 @@ def next(server) do
 
   { :APPEND_ENTRIES_REQUEST, term, requester } ->
     server
-    |> Debug.received_append_entries_request("Server received append entries request")
+    |> Debug.received_append_entries_request("Server #{server.server_num} received append entries request")
     |> ServerLib.stepdown_if_current_term_outdated(term)
-    |> AppendEntries.execute_append_request_and_repond_appropriately(term, requester)
+    |> Timer.restart_election_timer
+    |> AppendEntries.execute_append_request_and_respond_appropriately(term, requester)
 
-  # { :APPEND_ENTRIES_REPLY, ...
+  { :APPEND_ENTRIES_REPLY, term, _success, _index } ->
+    server
+    |> Debug.received_append_entries_reply("Server #{server.server_num} received append entries reply")
+    |> ServerLib.stepdown_if_current_term_outdated(term)
 
   { :APPEND_ENTRIES_TIMEOUT, append_entries_data } ->
     server
-    |> Debug.received_append_entries_timeout("Server received append entries timeout")
+    |> Debug.received_append_entries_timeout("Server #{server.server_num} received append entries timeout")
     |> AppendEntries.handle_append_entries_timeout(append_entries_data)
 
   { :VOTE_REQUEST, term, candidate } ->
     server
-    |> Debug.received_vreq("Server #{server.server_num} received vote request from #{candidate.server_num}")
     |> ServerLib.stepdown_if_current_term_outdated(term)
     |> Vote.vote_for_if_not_already(term, candidate)
 
@@ -55,7 +58,8 @@ def next(server) do
     |> Debug.received_etim("Server #{server.server_num} received election timeout")
     |> Vote.stand_for_election(timeout_metadata)
 
-  # { :CLIENT_REQUEST, ...
+  { :CLIENT_REQUEST, _client_request_data } ->
+    server
 
    unexpected ->
       Helper.node_halt("***** Server: unexpected message #{inspect unexpected}")
