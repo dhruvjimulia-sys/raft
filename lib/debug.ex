@@ -1,6 +1,7 @@
 
 # distributed algorithms, n.dulay, 14 jan 2024
 # coursework, raft consensus, v2
+# Add Debug.print()
 
 defmodule Debug do
 
@@ -13,7 +14,7 @@ def rpad(role)     do String.pad_trailing("#{role}", 9) end
 def tpad(term)     do String.pad_leading("#{term}", 3, "0") end
 def map(m)         do (for {k, v} <- m, into: "" do "\n\t#{kpad(k)}\t#{inspect v}" end) end
 
-def option?(config, option, level) do 
+def option?(config, option, level) do
   String.contains?(config.debug_options, option) and config.debug_level >= level
 end
 
@@ -21,16 +22,38 @@ def mapstr(config, mapname, mapvalue, level) do
   (if Debug.option?(config, "a", level) do "#{mapname} = #{map(mapvalue)}" else "" end)
 end
 
-def node_prefix(config) do 
-  "#{config.node_name}@#{config.node_location}" 
+def node_prefix(config) do
+  "#{config.node_name}@#{config.node_location}"
 end
 
-def server_prefix(server) do 
+def server_prefix(server) do
   "server#{server.server_num}-#{lpad(server.config.line_num)} role=#{rpad(server.role)} term=#{tpad(server.curr_term)}"
 end
 
-def inc_line_num(server) do 
+def inc_line_num(server) do
   Map.put(server, :config, Map.put(server.config, :line_num, server.config.line_num+1))
+end
+
+# _________________________________________________________ Debug.print()
+def received_vreq(server, message, level \\ 1) do
+  server |> Debug.message("-vreq", message, level)
+end
+
+def received_append_entries_timeout(server, message, level \\ 1) do
+  server |> Debug.message("-atim", message, level)
+end
+
+def received_vrep(server, message, level \\ 1) do
+  server |> Debug.message("-vrep", message, level)
+end
+
+def received_append_entries_request(server, message, level \\ 1) do
+  server |> Debug.message("-atim", message, level)
+end
+
+def print(server, message) do
+  IO.puts(message)
+  server
 end
 
 # _________________________________________________________ Debug.message()

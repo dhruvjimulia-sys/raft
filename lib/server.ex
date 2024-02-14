@@ -26,31 +26,27 @@ def next(server) do
   server = receive do
 
   { :APPEND_ENTRIES_REQUEST, term, requester } ->
-    server |> ServerLib.stepdown_if_current_term_outdated(term)
-    if term < server.curr_term do
-      server |> ServerLib.send_incorrect_append_entries_response(requester)
-    else
-      server
-    end
+    server
+    |> Debug.received_append_entries_request("Server received append entries request")
+    |> ServerLib.stepdown_if_current_term_outdated(term)
+    |> AppendEntries.execute_append_request_and_repond_appropriately(term, requester)
 
   # { :APPEND_ENTRIES_REPLY, ...
 
   { :APPEND_ENTRIES_TIMEOUT, append_entries_data } ->
-    if server.role == :CANDIDATE do
-      send append_entries_data.followerP, { :VOTE_REQUEST, server.curr_term, server.selfP }
-      Timer.restart_append_entries_timer(server, append_entries_data.followerP)
-    else
-      server
-    end
-
-  { :VOTE_REQUEST, term, candidate } = msg ->
     server
-    |> Debug.received(msg)
+    |> Debug.received_append_entries_timeout("Server received append entries timeout")
+    |> AppendEntries.handle_append_entries_timeout(append_entries_data)
+
+  { :VOTE_REQUEST, term, candidate } ->
+    server
+    |> Debug.received_vreq("Server #{server.server_num} received vote request from #{candidate.server_num}")
     |> ServerLib.stepdown_if_current_term_outdated(term)
     |> Vote.vote_for_if_not_already(term, candidate)
 
   { :VOTE_REPLY, term, vote, voter } ->
     server
+    |> Debug.received_vrep("Server #{server.server_num} received vote")
     |> ServerLib.stepdown_if_current_term_outdated(term)
     |> Vote.process_vote(term, vote, voter)
 

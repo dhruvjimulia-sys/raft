@@ -12,13 +12,14 @@ defmodule Vote do
     server
   end
 
-  # TODO Replace these functions by corresponding functions in state.ex
+  # TODO Replace Map.puts by corresponding functions in state.ex
   # TODO why is timeout_metadata.curr_election required? - edstem
   # TODO timeout_metadata unused?
   # TODO Debug.assert(server, server.curr_term == timeout_metadata.curr_term, "Server current term must be the same as the one passed in timeout_metadata")
   def stand_for_election(server, _timeout_metadata) do
     if server.role == :FOLLOWER or server.role == :CANDIDATE do
       server
+        |> Debug.print("Server #{server.server_num} stood for election")
         |> Timer.restart_election_timer()
         |> Map.put(:curr_term, server.curr_term + 1)
         |> Map.put(:role, :CANDIDATE)
@@ -32,11 +33,11 @@ defmodule Vote do
   end
 
   def vote_for_if_not_already(server, term, candidate) do
-    if term == server.curr_term and server.voted_for in MapSet.new([candidate, nil]) do
+    if term == server.curr_term and server.voted_for in MapSet.new([candidate.selfP, nil]) do
       server
-      |> Map.put(:voted_for, candidate)
+      |> Map.put(:voted_for, candidate.selfP)
       |> Timer.restart_election_timer
-      |> send_vote_reply(term, candidate)
+      |> send_vote_reply(term, candidate.selfP)
     else
       server
     end
@@ -51,7 +52,7 @@ defmodule Vote do
   def process_vote(server, term, vote, voter) do
     if term == server.curr_term and server.role == :CANDIDATE do
       server
-      |> Vote.add_vote_to_voted_by(vote, voter)
+      |> Vote.add_vote_to_voted_by_if_vote_is_for_self(vote, voter)
       |> Timer.cancel_append_entries_timer(voter)
       |> Vote.make_current_server_leader_if_recd_majority_votes
     else
@@ -59,7 +60,7 @@ defmodule Vote do
     end
   end
 
-  def add_vote_to_voted_by(server, vote, voter) do
+  def add_vote_to_voted_by_if_vote_is_for_self(server, vote, voter) do
     if vote == server.selfP do
       server |> Map.put(:voted_by, MapSet.put(server.voted_by, voter))
     else
