@@ -19,7 +19,7 @@ defmodule Vote do
   def stand_for_election(server, _timeout_metadata) do
     if server.role == :FOLLOWER or server.role == :CANDIDATE do
       server
-        |> Debug.print("Server #{server.server_num} stood for election")
+        |> Debug.stood_for_election("Server #{server.server_num} stood for election")
         |> Timer.restart_election_timer()
         |> Map.put(:curr_term, server.curr_term + 1)
         |> Map.put(:role, :CANDIDATE)
@@ -71,6 +71,7 @@ defmodule Vote do
   def make_current_server_leader_if_recd_majority_votes(server) do
     if MapSet.size(server.voted_by) >= server.majority do
       server
+      |> Debug.become_leader("Server #{server.server_num} became leader")
       |> Map.put(:role, :LEADER)
       |> Map.put(:leaderP, server.selfP)
       |> ServerLib.send_append_entries_to_all_servers_except_myself

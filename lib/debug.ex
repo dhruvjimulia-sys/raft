@@ -1,7 +1,7 @@
 
 # distributed algorithms, n.dulay, 14 jan 2024
 # coursework, raft consensus, v2
-# Add Debug.print()
+# Added debugging functions
 
 defmodule Debug do
 
@@ -48,7 +48,23 @@ def received_vrep(server, message, level \\ 1) do
 end
 
 def received_append_entries_request(server, message, level \\ 1) do
-  server |> Debug.message("-atim", message, level)
+  server |> Debug.message("-areq", message, level)
+end
+
+def send_vote_request(server, message, level \\ 1) do
+  server |> Debug.message("+vreq", message, level)
+end
+
+def received_etim(server, message, level \\ 1) do
+  server |> Debug.message("-etim", message, level)
+end
+
+def become_leader(server, message, level \\ 1) do
+  server |> Debug.message("lead", message, level)
+end
+
+def stood_for_election(server, message, level \\ 1) do
+  server |> Debug.message("standelec", message, level)
 end
 
 def print(server, message) do

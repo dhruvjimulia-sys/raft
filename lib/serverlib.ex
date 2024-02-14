@@ -34,7 +34,6 @@ end
 
 def send_incorrect_append_entries_response(server, requester) do
   send requester, { :APPEND_ENTRIES_RESPONSE, server.curr_term, false }
-  server
 end
 
 def send_append_entries_to_all_servers_except_myself(server) do

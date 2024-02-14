@@ -17,7 +17,9 @@ defmodule AppendEntries do
     if server.role == :CANDIDATE do
       # TODO Refactor send out into a function
       send append_entries_data.followerP, { :VOTE_REQUEST, server.curr_term, server }
-      server |> Timer.restart_append_entries_timer(append_entries_data.followerP)
+      server
+      |> Debug.send_vote_request("Server #{server.server_num} sent vote request")
+      |> Timer.restart_append_entries_timer(append_entries_data.followerP)
     else
       server
     end

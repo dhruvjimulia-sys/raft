@@ -51,7 +51,9 @@ def next(server) do
     |> Vote.process_vote(term, vote, voter)
 
   { :ELECTION_TIMEOUT, timeout_metadata } ->
-    server |> Vote.stand_for_election(timeout_metadata)
+    server
+    |> Debug.received_etim("Server #{server.server_num} received election timeout")
+    |> Vote.stand_for_election(timeout_metadata)
 
   # { :CLIENT_REQUEST, ...
 
