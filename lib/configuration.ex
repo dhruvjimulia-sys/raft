@@ -62,7 +62,6 @@ def params :default do
     },
 
     crash_leaders_after:      3000,    # nil or time after which leaders will crash
-
   }
 end # params :default
 

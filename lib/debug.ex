@@ -79,6 +79,11 @@ def stepdown(server, message, level \\ 1) do
   server |> Debug.message("stepdown", message, level)
 end
 
+def sleep(server) do
+  Helper.node_sleep("Server #{server.server_num} sleeping")
+  server
+end
+
 def print(server, message) do
   IO.puts(message)
   server
