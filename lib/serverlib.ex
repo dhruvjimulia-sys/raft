@@ -6,9 +6,10 @@ defmodule ServerLib do
 
 def stepdown(server, term) do
   server
-  |> Map.put(:curr_term, term)
-  |> Map.put(:state, :FOLLOWER)
-  |> Map.put(:voted_for, nil)
+  |> Debug.stepdown("Server #{server.server_num} is stepping down")
+  |> State.curr_term(term)
+  |> State.role(:FOLLOWER)
+  |> State.voted_for(nil)
   |> Timer.restart_election_timer
 end
 
@@ -20,10 +21,18 @@ def stepdown_if_current_term_outdated(server, term) do
   end
 end
 
+def stepdown_if_current_term_outdated_or_equal_to(server, term) do
+  if term >= server.curr_term do
+    server |> ServerLib.stepdown(term)
+  else
+    server
+  end
+end
+
 def send_append_entries(server, followerP) do
   server
   |> Debug.sent_append_entries("Server #{server.server_num} sending append entries")
-  |> Timer.restart_append_entries_timer(followerP, div(server.config.append_entries_timeout, 2))
+  |> Timer.restart_append_entries_timer(followerP, div(Enum.random(server.config.election_timeout_range), 3))
   |> ServerLib.send_append_entries_req(followerP)
 end
 
@@ -34,7 +43,8 @@ def send_append_entries_req(server, followerP) do
 end
 
 def send_incorrect_append_entries_reply(server, requester) do
-  send requester, { :APPEND_ENTRIES_REPLY, server.curr_term, false }
+  send requester, { :APPEND_ENTRIES_REPLY, server.curr_term, false, nil }
+  server
 end
 
 # def send_correct_append_entries_response(server, requester) do

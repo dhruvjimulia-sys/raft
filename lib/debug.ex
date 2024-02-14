@@ -75,6 +75,10 @@ def sent_append_entries(server, message, level \\ 1) do
   server |> Debug.message("+areq", message, level)
 end
 
+def stepdown(server, message, level \\ 1) do
+  server |> Debug.message("stepdown", message, level)
+end
+
 def print(server, message) do
   IO.puts(message)
   server

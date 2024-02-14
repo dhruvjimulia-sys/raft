@@ -11,7 +11,7 @@ PARAMS    = default	# e.g. default, slower, faster, etc
 DEBUG_OPTIONS = "none"
 DEBUG_LEVEL   = 1
 
-DEBUG_OPTIONS = "-vreq -vrep lead standelec -etim +areq -areq"
+DEBUG_OPTIONS = "-vreq +vrep -vrep lead standelec -etim +areq -areq stepdown -atim"
 # DEBUG_OPTIONS = "+areq -areq +arep -arep +vreq +vall -vreq +vrep -vrep +atim +etim -etim +dreq -dreq +drep -drep -creq -crep"
 # AppendEntries(areq, arep, atim), Vote(vreq, vrep, vall), Election(etim), DB(dreq, drep), Client(creq, crep)
 # Plus (+) for send/send_after. Minus (-) for receiver

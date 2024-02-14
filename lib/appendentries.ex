@@ -13,13 +13,20 @@ defmodule AppendEntries do
     end
   end
 
-  def handle_append_entries_timeout(server, append_entries_data) do
+  def if_candidate_send_votereq(server, append_entries_data) do
     if server.role == :CANDIDATE do
-      # TODO Refactor send out into a function
       send append_entries_data.followerP, { :VOTE_REQUEST, server.curr_term, server }
       server
       |> Debug.send_vote_request("Server #{server.server_num} sent vote request")
       |> Timer.restart_append_entries_timer(append_entries_data.followerP, server.config.append_entries_timeout)
+    else
+      server
+    end
+  end
+
+  def if_leader_send_append_entries(server, append_entries_data) do
+    if server.role == :LEADER do
+      server |> ServerLib.send_append_entries(append_entries_data.followerP)
     else
       server
     end

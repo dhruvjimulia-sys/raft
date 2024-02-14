@@ -28,7 +28,7 @@ def next(server) do
   { :APPEND_ENTRIES_REQUEST, term, requester } ->
     server
     |> Debug.received_append_entries_request("Server #{server.server_num} received append entries request")
-    |> ServerLib.stepdown_if_current_term_outdated(term)
+    |> ServerLib.stepdown_if_current_term_outdated_or_equal_to(term)
     |> Timer.restart_election_timer
     |> AppendEntries.execute_append_request_and_respond_appropriately(term, requester)
 
@@ -40,7 +40,8 @@ def next(server) do
   { :APPEND_ENTRIES_TIMEOUT, append_entries_data } ->
     server
     |> Debug.received_append_entries_timeout("Server #{server.server_num} received append entries timeout")
-    |> AppendEntries.handle_append_entries_timeout(append_entries_data)
+    |> AppendEntries.if_candidate_send_votereq(append_entries_data)
+    |> AppendEntries.if_leader_send_append_entries(append_entries_data)
 
   { :VOTE_REQUEST, term, candidate } ->
     server
