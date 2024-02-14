@@ -13,7 +13,7 @@ def stepdown(server, term) do
 end
 
 def stepdown_if_current_term_outdated(server, term) do
-  if term > server.current_term do
+  if term > server.curr_term do
     server |> ServerLib.stepdown(term)
   else
     server
@@ -26,12 +26,19 @@ def send_append_entries(server, followerP) do
   |> ServerLib.send_append_entries_req(followerP)
 end
 
+# TODO Put the following functions in appendentries.ex?
 def send_append_entries_req(server, followerP) do
   send followerP, { :APPEND_ENTRIES_REQUEST, server.curr_term, server.selfP }
+  server
+end
+
+def send_incorrect_append_entries_response(server, requester) do
+  send requester, { :APPEND_ENTRIES_RESPONSE, server.curr_term, false }
+  server
 end
 
 def send_append_entries_to_all_servers_except_myself(server) do
-  Enum.reduce(server.servers, server, fn acc, followerP ->
+  Enum.reduce(server.servers, server, fn followerP, acc ->
     if (followerP != server.selfP) do
       acc |> ServerLib.send_append_entries(followerP)
     else

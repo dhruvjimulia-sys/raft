@@ -14,10 +14,10 @@ defmodule Vote do
 
   # TODO Replace these functions by corresponding functions in state.ex
   # TODO why is timeout_metadata.curr_election required? - edstem
-  def stand_for_election(server, timeout_metadata) do
-    Debug.assert(server, server.curr_term == timeout_metadata.curr_term, "Server current term must be the same as the one passed in timeout_metadata")
-    # timeout_metadata: %{term: server.curr_term, election: server.curr_election}
-    if server.role == :LEADER or server.role == :CANDIDATE do
+  # TODO timeout_metadata unused?
+  # TODO Debug.assert(server, server.curr_term == timeout_metadata.curr_term, "Server current term must be the same as the one passed in timeout_metadata")
+  def stand_for_election(server, _timeout_metadata) do
+    if server.role == :FOLLOWER or server.role == :CANDIDATE do
       server
         |> Timer.restart_election_timer()
         |> Map.put(:curr_term, server.curr_term + 1)
@@ -32,7 +32,7 @@ defmodule Vote do
   end
 
   def vote_for_if_not_already(server, term, candidate) do
-    if term == server.curr_term and server.voted_for in {candidate, nil} do
+    if term == server.curr_term and server.voted_for in MapSet.new([candidate, nil]) do
       server
       |> Map.put(:voted_for, candidate)
       |> Timer.restart_election_timer

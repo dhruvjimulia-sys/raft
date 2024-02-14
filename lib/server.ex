@@ -23,13 +23,12 @@ end # start
 def next(server) do
 
   # invokes functions in AppendEntries, Vote, ServerLib etc
-
   server = receive do
 
   { :APPEND_ENTRIES_REQUEST, term, requester } ->
     server |> ServerLib.stepdown_if_current_term_outdated(term)
-    if term < server.current_term do
-      server |> ServerLib.send_append_entries_req(requester)
+    if term < server.curr_term do
+      server |> ServerLib.send_incorrect_append_entries_response(requester)
     else
       server
     end
@@ -37,16 +36,16 @@ def next(server) do
   # { :APPEND_ENTRIES_REPLY, ...
 
   { :APPEND_ENTRIES_TIMEOUT, append_entries_data } ->
-    # append_entries_data: %{term: server.curr_term, followerP: followerP }
     if server.role == :CANDIDATE do
-      send append_entries_data.followerP.selfP, { :VOTE_REQUEST, server.currentTerm, server.selfP }
+      send append_entries_data.followerP, { :VOTE_REQUEST, server.curr_term, server.selfP }
       Timer.restart_append_entries_timer(server, append_entries_data.followerP)
     else
       server
     end
 
-  { :VOTE_REQUEST, term, candidate } ->
+  { :VOTE_REQUEST, term, candidate } = msg ->
     server
+    |> Debug.received(msg)
     |> ServerLib.stepdown_if_current_term_outdated(term)
     |> Vote.vote_for_if_not_already(term, candidate)
 
@@ -62,7 +61,7 @@ def next(server) do
 
    unexpected ->
       Helper.node_halt("***** Server: unexpected message #{inspect unexpected}")
-
+      server
   end # receive
 
   server |> Server.next()
