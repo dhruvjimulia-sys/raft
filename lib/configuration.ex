@@ -1,6 +1,7 @@
 
 # distributed algorithms, n.dulay, 14 jan 2024
 # raft, configuration parameters v2
+# add repeated_crashing_leaders, per_server_file_logging to config params
 
 defmodule Configuration do
 
@@ -62,6 +63,9 @@ def params :default do
     },
 
     crash_leaders_after:      3000,    # nil or time after which leaders will crash
+
+    repeated_crashing_leaders: true,   # if true, will crash leaders repeatedly EVERY crash_leaders_after ms
+    per_server_file_logging:  true     # if true, gives per-server logging info in separate files
   }
 end # params :default
 

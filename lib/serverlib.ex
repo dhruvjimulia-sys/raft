@@ -61,4 +61,20 @@ def send_append_entries_to_all_servers_except_myself(server) do
   end)
 end
 
+def kill_if_leader(server) do
+  if server.role == :LEADER do
+    Debug.print(server, "Leader server #{server.server_num} was killed by KILL_LEADER")
+    Helper.node_halt("Crashing leader #{server.server_num}")
+  else
+    if server.config.repeated_crashing_leaders do
+      Process.send_after(self(), { :KILL_LEADER }, server.config.crash_leaders_after)
+    end
+  end
+  server
+end
+
+def get_server_debug_file_name(server_num) do
+  "server#{server_num}.log"
+end
+
 end # ServerLib

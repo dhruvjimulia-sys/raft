@@ -10,6 +10,12 @@ def start(config, server_num) do
     |> Configuration.node_info("Server", server_num)
     |> Debug.node_starting()
 
+  if config.crash_leaders_after !== nil do
+    Process.send_after(self(), { :KILL_LEADER }, config.crash_leaders_after)
+  end
+
+  File.rm(ServerLib.get_server_debug_file_name(server_num))
+
   receive do
   { :BIND, servers, databaseP } ->
     config
@@ -24,6 +30,10 @@ def next(server) do
 
   # invokes functions in AppendEntries, Vote, ServerLib etc
   server = receive do
+
+  { :KILL_LEADER } ->
+    server
+    |> ServerLib.kill_if_leader
 
   { :APPEND_ENTRIES_REQUEST, term, requester } ->
     server

@@ -85,6 +85,11 @@ def sleep(server) do
 end
 
 def print(server, message) do
+  if server.config.per_server_file_logging do
+    {:ok, file} = File.open("server#{server.server_num}.log", [:append])
+    IO.puts(file, message)
+    File.close(file)
+  end
   IO.puts(message)
   server
 end
@@ -93,7 +98,13 @@ end
 def message(server, option, message, level \\ 1) do
   unless Debug.option?(server.config, option, level) do server else
     server = server |> Debug.inc_line_num()
-    IO.puts "#{server_prefix(server)} #{option} #{inspect message}"
+    log_output = "#{server_prefix(server)} #{option} #{inspect message}"
+    if server.config.per_server_file_logging do
+      {:ok, file} = File.open("server#{server.server_num}.log", [:append])
+      IO.puts(file, log_output)
+      File.close(file)
+    end
+    IO.puts log_output
     server
   end # unless
 end # message
