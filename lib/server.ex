@@ -10,8 +10,13 @@ def start(config, server_num) do
     |> Configuration.node_info("Server", server_num)
     |> Debug.node_starting()
 
+  # handle crashing as described in config
   if config.crash_leaders_after !== nil do
     Process.send_after(self(), { :KILL_LEADER }, config.crash_leaders_after)
+  end
+  crash_time = Map.get(config.crash_servers, server_num)
+  if crash_time !== nil do
+    Process.send_after(self(), { :KILL_SERVER }, crash_time)
   end
 
   File.rm(ServerLib.get_server_debug_file_name(server_num))
@@ -32,8 +37,10 @@ def next(server) do
   server = receive do
 
   { :KILL_LEADER } ->
-    server
-    |> ServerLib.kill_if_leader
+    server |> ServerLib.kill_if_leader
+
+  { :KILL_SERVER } ->
+    server |> ServerLib.kill_server
 
   { :APPEND_ENTRIES_REQUEST, append_entries_request_data } ->
     server

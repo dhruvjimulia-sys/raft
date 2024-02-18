@@ -63,14 +63,21 @@ end
 
 def kill_if_leader(server) do
   if server.role == :LEADER do
-    Debug.print(server, "Leader server #{server.server_num} was killed by KILL_LEADER")
-    Helper.node_halt("Crashing leader #{server.server_num}")
+    kill_leader_log = "Leader server #{server.server_num} was killed by KILL_LEADER"
+    Debug.print(server, kill_leader_log)
+    Helper.node_halt(kill_leader_log)
   else
     if server.config.repeated_crashing_leaders do
       Process.send_after(self(), { :KILL_LEADER }, server.config.crash_leaders_after)
     end
   end
   server
+end
+
+def kill_server(server) do
+  kill_server_log = "Server #{server.server_num} was killed by KILL_SERVER"
+  Debug.print(server, kill_server_log)
+  Helper.node_halt(kill_server_log)
 end
 
 def get_server_debug_file_name(server_num) do
