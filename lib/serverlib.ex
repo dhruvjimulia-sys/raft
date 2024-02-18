@@ -38,12 +38,12 @@ end
 
 # TODO Put the following functions in appendentries.ex?
 def send_append_entries_req(server, followerP) do
-  send followerP, { :APPEND_ENTRIES_REQUEST, server.curr_term, server.selfP }
+  send followerP, { :APPEND_ENTRIES_REQUEST, %{term: server.curr_term, requester: server.selfP} }
   server
 end
 
 def send_incorrect_append_entries_reply(server, requester) do
-  send requester, { :APPEND_ENTRIES_REPLY, server.curr_term, false, nil }
+  send requester, { :APPEND_ENTRIES_REPLY, %{term: server.curr_term, success: false, index: nil} }
   server
 end
 

@@ -15,7 +15,7 @@ defmodule AppendEntries do
 
   def if_candidate_send_votereq(server, append_entries_data) do
     if server.role == :CANDIDATE do
-      send append_entries_data.followerP, { :VOTE_REQUEST, server.curr_term, server }
+      send append_entries_data.followerP, { :VOTE_REQUEST, %{ term: server.curr_term, candidate: server} }
       server
       |> Debug.send_vote_request("Server #{server.server_num} sent vote request")
       |> Timer.restart_append_entries_timer(append_entries_data.followerP, server.config.append_entries_timeout)

@@ -62,7 +62,7 @@ def params :default do
       # 4 => 8_000,
     },
 
-    crash_leaders_after:      3000,    # nil or time after which leaders will crash
+    crash_leaders_after:      nil,    # nil or time after which leaders will crash
 
     repeated_crashing_leaders: true,   # if true, will crash leaders repeatedly EVERY crash_leaders_after ms
     per_server_file_logging:  true     # if true, gives per-server logging info in separate files

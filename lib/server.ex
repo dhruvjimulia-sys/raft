@@ -35,17 +35,17 @@ def next(server) do
     server
     |> ServerLib.kill_if_leader
 
-  { :APPEND_ENTRIES_REQUEST, term, requester } ->
+  { :APPEND_ENTRIES_REQUEST, append_entries_request_data } ->
     server
     |> Debug.received_append_entries_request("Server #{server.server_num} received append entries request")
-    |> ServerLib.stepdown_if_current_term_outdated_or_equal_to(term)
+    |> ServerLib.stepdown_if_current_term_outdated_or_equal_to(append_entries_request_data.term)
     |> Timer.restart_election_timer
-    |> AppendEntries.execute_append_request_and_respond_appropriately(term, requester)
+    |> AppendEntries.execute_append_request_and_respond_appropriately(append_entries_request_data.term, append_entries_request_data.requester)
 
-  { :APPEND_ENTRIES_REPLY, term, _success, _index } ->
+  { :APPEND_ENTRIES_REPLY, append_entries_reply_data } ->
     server
     |> Debug.received_append_entries_reply("Server #{server.server_num} received append entries reply")
-    |> ServerLib.stepdown_if_current_term_outdated(term)
+    |> ServerLib.stepdown_if_current_term_outdated(append_entries_reply_data.term)
 
   { :APPEND_ENTRIES_TIMEOUT, append_entries_data } ->
     server
@@ -53,16 +53,16 @@ def next(server) do
     |> AppendEntries.if_candidate_send_votereq(append_entries_data)
     |> AppendEntries.if_leader_send_append_entries(append_entries_data)
 
-  { :VOTE_REQUEST, term, candidate } ->
+  { :VOTE_REQUEST, vote_request_data } ->
     server
-    |> ServerLib.stepdown_if_current_term_outdated(term)
-    |> Vote.vote_for_if_not_already(term, candidate)
+    |> ServerLib.stepdown_if_current_term_outdated(vote_request_data.term)
+    |> Vote.vote_for_if_not_already(vote_request_data.term, vote_request_data.candidate)
 
-  { :VOTE_REPLY, term, vote, voter } ->
+  { :VOTE_REPLY, vote_reply_data } ->
     server
     |> Debug.received_vrep("Server #{server.server_num} received vote")
-    |> ServerLib.stepdown_if_current_term_outdated(term)
-    |> Vote.process_vote(term, vote, voter)
+    |> ServerLib.stepdown_if_current_term_outdated(vote_reply_data.term)
+    |> Vote.process_vote(vote_reply_data.term, vote_reply_data.vote, vote_reply_data.voter)
 
   { :ELECTION_TIMEOUT, timeout_metadata } ->
     server

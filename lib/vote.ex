@@ -44,7 +44,7 @@ defmodule Vote do
   end
 
   defp send_vote_reply(server, term, candidate) do
-    vote_reply_msg = { :VOTE_REPLY, term, server.voted_for, server.selfP }
+    vote_reply_msg = { :VOTE_REPLY, %{term: term, vote: server.voted_for, voter: server.selfP} }
     send candidate, vote_reply_msg
     server
   end
