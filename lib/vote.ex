@@ -32,12 +32,26 @@ defmodule Vote do
     end
   end
 
-  def vote_for_if_not_already(server, term, candidate) do
-    if term == server.curr_term and server.voted_for in MapSet.new([candidate.selfP, nil]) do
+  def if_candidate_send_votereq(server, append_entries_data) do
+    if server.role == :CANDIDATE do
+      send append_entries_data.followerP, { :VOTE_REQUEST, %{ term: server.curr_term, candidate: server,
+                                                              last_log_index: server.log.last_index(server), last_log_term: server.log.last_term(server)} }
       server
-      |> Map.put(:voted_for, candidate.selfP)
+      |> Debug.send_vote_request("Server #{server.server_num} sent vote request")
+      |> Timer.restart_append_entries_timer(append_entries_data.followerP, server.config.append_entries_timeout)
+    else
+      server
+    end
+  end
+
+  def vote_for_if_not_already(server, vote_req) do
+    vote_is_more_complete = vote_req.last_log_term < server.log.last_term(server) or
+                            (vote_req.last_log_term == server.log.last_term(server) and vote_req.last_log_index < server.log.last_index(server))
+    if vote_req.term == server.curr_term and server.voted_for in MapSet.new([vote_req.candidate.selfP, nil]) and !vote_is_more_complete do
+      server
+      |> Map.put(:voted_for, vote_req.candidate.selfP)
       |> Timer.restart_election_timer
-      |> send_vote_reply(term, candidate.selfP)
+      |> send_vote_reply(vote_req.term, vote_req.candidate.selfP)
     else
       server
     end

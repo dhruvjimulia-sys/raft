@@ -47,23 +47,24 @@ def next(server) do
     |> Debug.received_append_entries_request("Server #{server.server_num} received append entries request")
     |> ServerLib.stepdown_if_current_term_outdated_or_equal_to(append_entries_request_data.term)
     |> Timer.restart_election_timer
-    |> AppendEntries.execute_append_request_and_respond_appropriately(append_entries_request_data.term, append_entries_request_data.requester)
+    |> AppendEntries.execute_append_request_and_respond_appropriately(append_entries_request_data)
 
   { :APPEND_ENTRIES_REPLY, append_entries_reply_data } ->
     server
     |> Debug.received_append_entries_reply("Server #{server.server_num} received append entries reply")
     |> ServerLib.stepdown_if_current_term_outdated(append_entries_reply_data.term)
+    |> AppendEntries.advance_commit_index_if_majority(append_entries_reply_data)
 
   { :APPEND_ENTRIES_TIMEOUT, append_entries_data } ->
     server
     |> Debug.received_append_entries_timeout("Server #{server.server_num} received append entries timeout")
-    |> AppendEntries.if_candidate_send_votereq(append_entries_data)
+    |> Vote.if_candidate_send_votereq(append_entries_data)
     |> AppendEntries.if_leader_send_append_entries(append_entries_data)
 
   { :VOTE_REQUEST, vote_request_data } ->
     server
     |> ServerLib.stepdown_if_current_term_outdated(vote_request_data.term)
-    |> Vote.vote_for_if_not_already(vote_request_data.term, vote_request_data.candidate)
+    |> Vote.vote_for_if_not_already(vote_request_data)
 
   { :VOTE_REPLY, vote_reply_data } ->
     server
@@ -76,8 +77,15 @@ def next(server) do
     |> Debug.received_etim("Server #{server.server_num} received election timeout")
     |> Vote.stand_for_election(timeout_metadata)
 
-  { :CLIENT_REQUEST, _client_request_data } ->
+  { :CLIENT_REQUEST, client_req } ->
     server
+    |> Debug.received_client_request("Server #{server.server_num} received client request")
+    |> ClientRequest.process_client_request(client_req)
+
+  { :DB_REPLY, db_result } ->
+    server
+    |> Debug.received_db_reply("Server #{server.server_num} received db reply")
+    |> ClientRequest.return_db_result(db_result)
 
    unexpected ->
       Helper.node_halt("***** Server: unexpected message #{inspect unexpected}")

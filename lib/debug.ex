@@ -35,6 +35,14 @@ def inc_line_num(server) do
 end
 
 # _________________________________________________________ Debug.print()
+def received_client_request(server, message, level \\ 1) do
+  server |> Debug.message("-creq", message, level)
+end
+
+def received_db_reply(server, message, level \\ 1) do
+  server |> Debug.message("-dbrep", message, level)
+end
+
 def received_vreq(server, message, level \\ 1) do
   server |> Debug.message("-vreq", message, level)
 end
