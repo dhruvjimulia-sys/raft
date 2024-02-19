@@ -8,11 +8,13 @@ defmodule AppendEntries do
     if request.term < server.curr_term do
       server |> ServerLib.send_incorrect_append_entries_reply(request.requester)
     else
-      index = 0
-      success = request.prev_log_index == 0 || (request.prev_log_index <= server.log.length and request.prev_log_term == server.log[request.prev_log_index].term)
-      if success do
-        index = server |> store_entries(request.prev_log_index, request.entries, request.commit_index)
-      end
+      success = request.prev_log_index == 0 || (request.prev_log_index <= Log.last_index(server) and request.prev_log_term == server.log[request.prev_log_index].term)
+      index =
+        if success do
+          server |> store_entries(request.prev_log_index, request.entries, request.commit_index)
+        else
+          0
+        end
       send request.requester, { :APPEND_ENTRIES_REPLY, %{term: server.curr_term, success: success, index: index} }
       server
     end
@@ -26,13 +28,34 @@ defmodule AppendEntries do
     end
   end
 
-  def advance_commit_index_if_majority(server, append_entries_reply_data) do
-    server |> assert(server.role == :LEADER, "advance_commit_index_if_majority: server.role != :LEADER")
+  def process_append_entries_reply(server, reply) do
+    if reply.term < server.curr_term or !(server.role == :LEADER) do
+      server
+    else
+      server =
+        if reply.success do
+          server
+          |> match_index(reply.followerP, reply.index)
+          |> next_index(reply.followerP, reply.index + 1)
+        else
+          server |> next_index(reply.followerP, max(1, server.next_index[reply.followerP] - 1))
+        end
+      server =
+        if server.next_index <= Log.last_index(server) do
+          server |> ServerLib.send_append_entries(reply.followerP)
+        else
+          server
+        end
+      server |> advance_commit_index_if_majority
+    end
+  end
+
+  defp advance_commit_index_if_majority(server) do
     agreed_indexes = get_agreed_indexes(server)
     new_commit_index =
       if length(agreed_indexes) >= 0 do
         new_commit_index = max(agreed_indexes)
-        if new_commit_index > server.commit_index and server.log.term_at(new_commit_index) == server.curr_term do
+        if new_commit_index > server.commit_index and Log.term_at(server, new_commit_index) == server.curr_term do
           new_commit_index
         else
           server.commit_index
@@ -40,11 +63,10 @@ defmodule AppendEntries do
       else
         server.commit_index
       end
-    for index_to_commit <- server.commit_index + 1..new_commit_index do
-      send server.databaseP, { :DB_REQUEST, server.log.entry_at(server, index_to_commit) }
+    for index_to_commit <- (server.commit_index + 1)..new_commit_index do
+      send server.databaseP, { :DB_REQUEST, Log.entry_at(server, index_to_commit) }
     end
-    server.commit_index = new_commit_index
-    server
+    server |> commit_index(new_commit_index)
   end
 
   defp quorum_agrees(server, index) do
@@ -59,7 +81,7 @@ defmodule AppendEntries do
   end
 
   defp get_agreed_indexes(server) do
-    for index <- 1..server.log.last_index(server), quorum_agrees(server, index) do
+    for index <- 1..Log.last_index(server), quorum_agrees(server, index) do
       index
     end
   end

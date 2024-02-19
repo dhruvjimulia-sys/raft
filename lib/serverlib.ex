@@ -38,18 +38,23 @@ end
 
 # TODO Put the following functions in appendentries.ex?
 def send_append_entries_req(server, followerP) do
-  send followerP, { :APPEND_ENTRIES_REQUEST, %{term: server.curr_term, requester: server.selfP} }
+  last_log_index = server.next_index[followerP] - 1
+  last_log_term =
+    if last_log_index > 0 do
+      Log.term_at(server, last_log_index)
+    else
+      0
+    end
+  entries = Log.get_entries_from(server, server.next_index[followerP])
+  send followerP, { :APPEND_ENTRIES_REQUEST, %{term: server.curr_term, requester: server.selfP, prev_log_term: last_log_term, prev_log_index: last_log_index,
+                                                commit_index: server.commit_index, entries: entries} }
   server
 end
 
 def send_incorrect_append_entries_reply(server, requester) do
-  send requester, { :APPEND_ENTRIES_REPLY, %{term: server.curr_term, success: false, index: nil} }
+  send requester, { :APPEND_ENTRIES_REPLY, %{term: server.curr_term, success: false, followerP: server.selfP} }
   server
 end
-
-# def send_correct_append_entries_response(server, requester) do
-#   send requester
-# end
 
 def send_append_entries_to_all_servers_except_myself(server) do
   Enum.reduce(server.servers, server, fn followerP, acc ->

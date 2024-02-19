@@ -53,7 +53,7 @@ def next(server) do
     server
     |> Debug.received_append_entries_reply("Server #{server.server_num} received append entries reply")
     |> ServerLib.stepdown_if_current_term_outdated(append_entries_reply_data.term)
-    |> AppendEntries.advance_commit_index_if_majority(append_entries_reply_data)
+    |> AppendEntries.process_append_entries_reply(append_entries_reply_data)
 
   { :APPEND_ENTRIES_TIMEOUT, append_entries_data } ->
     server
