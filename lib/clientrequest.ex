@@ -2,6 +2,7 @@
 # distributed algorithms, n.dulay, 14 jan 2024
 # coursework, raft consensus, v2
 
+
 defmodule ClientRequest do
   def process_client_request(server, client_req) do
     if server.role == :LEADER do
@@ -11,11 +12,12 @@ defmodule ClientRequest do
         server
       else
         server
-        |> Log.append_entry(server, client_req)
+        |> Log.append_entry(client_req)
         |> ServerLib.send_append_entries_to_all_servers_except_myself
       end
     else
-      send client_command.clientP, { :CLIENT_REPLY, %{cid: client_command.cid, reply: :NOT_LEADER, leaderP: server.leaderP} }
+      # DJQUES: client_req, and not client_command?
+      send client_req.clientP, { :CLIENT_REPLY, %{cid: client_req.cid, reply: :NOT_LEADER, leaderP: server.leaderP} }
       server
     end
   end

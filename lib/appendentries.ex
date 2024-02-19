@@ -28,6 +28,7 @@ defmodule AppendEntries do
     end
   end
 
+  # DJQUES: ELSE IF: FIRST PART OF CONDITION <=????
   def process_append_entries_reply(server, reply) do
     if reply.term < server.curr_term or !(server.role == :LEADER) do
       server
@@ -35,10 +36,10 @@ defmodule AppendEntries do
       server =
         if reply.success do
           server
-          |> match_index(reply.followerP, reply.index)
-          |> next_index(reply.followerP, reply.index + 1)
+          |> State.match_index(reply.followerP, reply.index)
+          |> State.next_index(reply.followerP, reply.index + 1)
         else
-          server |> next_index(reply.followerP, max(1, server.next_index[reply.followerP] - 1))
+          server |> State.next_index(reply.followerP, max(1, server.next_index[reply.followerP] - 1))
         end
       server =
         if server.next_index <= Log.last_index(server) do
@@ -54,7 +55,7 @@ defmodule AppendEntries do
     agreed_indexes = get_agreed_indexes(server)
     new_commit_index =
       if length(agreed_indexes) >= 0 do
-        new_commit_index = max(agreed_indexes)
+        new_commit_index = Enum.max(agreed_indexes)
         if new_commit_index > server.commit_index and Log.term_at(server, new_commit_index) == server.curr_term do
           new_commit_index
         else
@@ -66,7 +67,7 @@ defmodule AppendEntries do
     for index_to_commit <- (server.commit_index + 1)..new_commit_index do
       send server.databaseP, { :DB_REQUEST, Log.entry_at(server, index_to_commit) }
     end
-    server |> commit_index(new_commit_index)
+    server |> State.commit_index(new_commit_index)
   end
 
   defp quorum_agrees(server, index) do
@@ -78,11 +79,16 @@ defmodule AppendEntries do
           acc
         end
     end
+    # DJQUES: WHAT DOES THIS RETURN? COUNT UNUSED?
   end
 
   defp get_agreed_indexes(server) do
     for index <- 1..Log.last_index(server), quorum_agrees(server, index) do
       index
     end
+  end
+
+  defp store_entries(server, prev_log_index, entries, commit_index) do
+    # TODO!!!
   end
 end # AppendEntries
