@@ -44,7 +44,7 @@ def next(server) do
 
   { :APPEND_ENTRIES_REQUEST, append_entries_request_data } ->
     server
-    |> Debug.received_append_entries_request("Server #{server.server_num} received append entries request")
+    |> Debug.received_append_entries_request("Server #{server.server_num} received append entries request #{inspect append_entries_request_data.entries}")
     |> ServerLib.stepdown_if_current_term_outdated_or_equal_to(append_entries_request_data.term)
     |> Timer.restart_election_timer
     |> AppendEntries.execute_append_request_and_respond_appropriately(append_entries_request_data)
@@ -79,7 +79,7 @@ def next(server) do
 
   { :CLIENT_REQUEST, client_req } ->
     server
-    |> Debug.received_client_request("Server #{server.server_num} received client request")
+    |> Debug.received_client_request("Server #{server.server_num} received client request cid: #{inspect client_req.cid}")
     |> ClientRequest.process_client_request(client_req)
 
   { :DB_REPLY, db_result } ->

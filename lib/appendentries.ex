@@ -9,13 +9,13 @@ defmodule AppendEntries do
       server |> ServerLib.send_incorrect_append_entries_reply(request.requester)
     else
       success = request.prev_log_index == 0 || (request.prev_log_index <= Log.last_index(server) and request.prev_log_term == server.log[request.prev_log_index].term)
-      index =
+      { server, index } =
         if success do
           server |> store_entries(request.prev_log_index, request.entries, request.commit_index)
         else
-          0
+          {server, 0}
         end
-      send request.requester, { :APPEND_ENTRIES_REPLY, %{term: server.curr_term, success: success, index: index} }
+      send request.requester, { :APPEND_ENTRIES_REPLY, %{term: server.curr_term, success: success, followerP: server.selfP, index: index} }
       server
     end
   end
@@ -54,7 +54,7 @@ defmodule AppendEntries do
   defp advance_commit_index_if_majority(server) do
     agreed_indexes = get_agreed_indexes(server)
     new_commit_index =
-      if length(agreed_indexes) >= 0 do
+      if length(agreed_indexes) > 0 do
         new_commit_index = Enum.max(agreed_indexes)
         if new_commit_index > server.commit_index and Log.term_at(server, new_commit_index) == server.curr_term do
           new_commit_index
@@ -64,10 +64,9 @@ defmodule AppendEntries do
       else
         server.commit_index
       end
-    for index_to_commit <- (server.commit_index + 1)..new_commit_index do
-      send server.databaseP, { :DB_REQUEST, Log.entry_at(server, index_to_commit) }
-    end
-    server |> State.commit_index(new_commit_index)
+    server
+    |> commit_all_entries_till_commit_index(new_commit_index)
+    |> State.commit_index(new_commit_index)
   end
 
   defp quorum_agrees(server, index) do
@@ -95,18 +94,22 @@ defmodule AppendEntries do
     end)
   end
 
-  defp commit_all_entries_in_range(server, range) do
-    for index_to_commit <- range do
-      send server.databaseP, { :DB_REQUEST, Log.entry_at(server, index_to_commit) }
+  defp commit_all_entries_till_commit_index(server, commit_index) do
+    if commit_index > server.commit_index do
+      for index_to_commit <- (server.commit_index + 1)..commit_index do
+        Debug.print(server, "Server #{server.server_num} #{inspect Log.entry_at(server, index_to_commit)}")
+        send server.databaseP, { :DB_REQUEST, Log.entry_at(server, index_to_commit) }
+      end
     end
+    server
   end
 
   defp store_entries(server, prev_log_index, entries, commit_index) do
     server = server
     |> Log.delete_entries(prev_log_index + 1..Log.last_index(server))
     |> append_entries_to_log(entries)
+    |> commit_all_entries_till_commit_index(commit_index)
     |> State.commit_index(min(commit_index, prev_log_index + map_size(entries)))
-    |> commit_all_entries_in_range(server.commit_index..commit_index)
     { server, prev_log_index + map_size(entries) }
   end
 end # AppendEntries

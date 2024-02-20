@@ -5,12 +5,12 @@
 defmodule ClientRequest do
   def process_client_request(server, client_req) do
     if server.role == :LEADER do
-      duplicate = Enum.find(server.log, fn entry -> entry.cid == client_req.cid end)
+      duplicate = Enum.find(server.log, fn {_, entry} -> entry.request.cid == client_req.cid end)
       if duplicate do
         server
       else
         server
-        |> Log.append_entry(client_req)
+        |> Log.append_entry(%{term: server.curr_term, request: client_req})
         |> ServerLib.send_append_entries_to_all_servers_except_myself
       end
     else
