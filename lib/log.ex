@@ -45,4 +45,11 @@ def delete_entries_from(server, from) do             # delete server.log[from..l
   Log.delete_entries(server, from .. Log.last_index(server) // 1 )
 end
 
+@spec get_log_string(any()) :: binary()
+def get_log_string(server) do
+  inspect Enum.map(Log.get_entries_from(server, 1), fn {_, entry} ->
+    entry.request.cid
+  end)
+end
+
 end # Log

@@ -69,6 +69,7 @@ defmodule AppendEntries do
     |> State.commit_index(new_commit_index)
   end
 
+  # DJTODO: IS THIS THE INTENDED BEHAVIOUR?
   defp quorum_agrees(server, index) do
     count = for followerP <- server.servers, reduce: 0 do
       acc ->
@@ -79,7 +80,6 @@ defmodule AppendEntries do
         end
     end
     count >= server.majority
-    # DJTODO: IS THIS THE INTENDED BEHAVIOUR?
   end
 
   defp get_agreed_indexes(server) do
@@ -89,26 +89,31 @@ defmodule AppendEntries do
   end
 
   defp append_entries_to_log(server, entries) do
-    Enum.reduce(entries, server, fn entry, acc ->
-      Log.append_entry(acc, entry)
+    Enum.reduce(entries, server, fn {_, entry}, acc ->
+      acc
+      |> Debug.appended_entry("Server #{acc.server_num} appended #{inspect entry.request.cid} (append entries)")
+      |> Log.append_entry(entry)
     end)
   end
 
   defp commit_all_entries_till_commit_index(server, commit_index) do
     if commit_index > server.commit_index do
       for index_to_commit <- (server.commit_index + 1)..commit_index do
-        Debug.print(server, "Server #{server.server_num} #{inspect Log.entry_at(server, index_to_commit)}")
-        send server.databaseP, { :DB_REQUEST, Log.entry_at(server, index_to_commit) }
+        send server.databaseP, { :DB_REQUEST, Log.request_at(server, index_to_commit) }
       end
     end
     server
   end
 
+  # TODO: cannot pipeline the following!!! keep it as it is!!
   defp store_entries(server, prev_log_index, entries, commit_index) do
     server = server
+    |> Debug.store_entries("Server #{server.server_num} to store entries #{inspect entries}")
     |> Log.delete_entries(prev_log_index + 1..Log.last_index(server))
-    |> append_entries_to_log(entries)
-    |> commit_all_entries_till_commit_index(commit_index)
+    server = server |> append_entries_to_log(entries)
+    server = server
+    |> Debug.appended_entry("After appending entries, resulting log is #{inspect Log.get_entries_from(server, 1)}")
+    |> commit_all_entries_till_commit_index(min(commit_index, prev_log_index + map_size(entries)))
     |> State.commit_index(min(commit_index, prev_log_index + map_size(entries)))
     { server, prev_log_index + map_size(entries) }
   end

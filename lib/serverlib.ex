@@ -47,7 +47,7 @@ def send_append_entries_req(server, followerP) do
     else
       0
     end
-  entries = Log.get_entries_from(server, server.next_index[followerP])
+  entries = Log.get_entries_from(server, last_log_index + 1)
   send followerP, { :APPEND_ENTRIES_REQUEST, %{term: server.curr_term, requester: server.selfP, prev_log_term: last_log_term, prev_log_index: last_log_index,
                                                 commit_index: server.commit_index, entries: entries} }
   server

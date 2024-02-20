@@ -87,6 +87,14 @@ def stepdown(server, message, level \\ 1) do
   server |> Debug.message("stepdown", message, level)
 end
 
+def appended_entry(server, message, level \\ 1) do
+  server |> Debug.message("appendentry", message, level)
+end
+
+def store_entries(server, message, level \\ 1) do
+  server |> Debug.message("storeentries", message, level)
+end
+
 def sleep(server) do
   Helper.node_sleep("Server #{server.server_num} sleeping")
   server

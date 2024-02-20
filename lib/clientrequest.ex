@@ -9,7 +9,9 @@ defmodule ClientRequest do
       if duplicate do
         server
       else
+        send server.config.monitorP, { :CLIENT_REQUEST, server.server_num }
         server
+        |> Debug.appended_entry("Server #{server.server_num} appended #{inspect client_req.cid}")
         |> Log.append_entry(%{term: server.curr_term, request: client_req})
         |> ServerLib.send_append_entries_to_all_servers_except_myself
       end

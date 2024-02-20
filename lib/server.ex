@@ -82,7 +82,7 @@ def next(server) do
     |> Debug.received_client_request("Server #{server.server_num} received client request cid: #{inspect client_req.cid}")
     |> ClientRequest.process_client_request(client_req)
 
-  { :DB_REPLY, db_result } ->
+  { :DB_REPLY, {:OK, db_result }} ->
     server
     |> Debug.received_db_reply("Server #{server.server_num} received db reply")
     |> ClientRequest.return_db_result(db_result)
