@@ -21,7 +21,6 @@ defmodule ClientRequest do
     end
   end
 
-  # DJTODO: Why db_result.reply??? Why not just db_result?
   def return_db_result(server, db_result) do
     send db_result.clientP, { :CLIENT_REPLY, %{cid: db_result.cid, reply: db_result, leaderP: server.leaderP} }
     server

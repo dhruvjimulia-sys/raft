@@ -37,7 +37,6 @@ def send_append_entries(server, followerP) do
 end
 
 # TODO Put the following functions in appendentries.ex?
-# DJTODO: next_index should be updated here!
 def send_append_entries_req(server, followerP) do
   last_log_index = server.next_index[followerP] - 1
   server = server |> State.next_index(followerP, Log.last_index(server) + 1)

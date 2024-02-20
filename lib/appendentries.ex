@@ -74,7 +74,6 @@ defmodule AppendEntries do
     server
   end
 
-  # DJTODO: IS THIS THE INTENDED BEHAVIOUR?
   defp quorum_agrees(server, index) do
     count = for followerP <- server.servers, reduce: 0 do
       acc ->
