@@ -88,11 +88,19 @@ def stepdown(server, message, level \\ 1) do
 end
 
 def appended_entry(server, message, level \\ 1) do
-  server |> Debug.message("appendentry", message, level)
+  server |> Debug.message("appendentries", message, level)
 end
 
 def store_entries(server, message, level \\ 1) do
   server |> Debug.message("storeentries", message, level)
+end
+
+def commit_entries(server, message, level \\ 1) do
+  server |> Debug.message("commitentries", message, level)
+end
+
+def execute_entries(server, message, level \\ 1) do
+  server |> Debug.message("executeentries", message, level)
 end
 
 def sleep(server) do

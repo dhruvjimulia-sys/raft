@@ -11,7 +11,9 @@ defmodule AppendEntries do
       success = request.prev_log_index == 0 || (request.prev_log_index <= Log.last_index(server) and request.prev_log_term == server.log[request.prev_log_index].term)
       { server, index } =
         if success do
-          server |> store_entries(request.prev_log_index, request.entries, request.commit_index)
+          server
+          # |> Debug.print("PrevIndex: #{request.prev_log_index}, Entries: #{get_string_entries(request.entries)}, CommitIndex: #{request.commit_index}")
+          |> store_entries(request.prev_log_index, request.entries, request.commit_index)
         else
           {server, 0}
         end
@@ -64,9 +66,12 @@ defmodule AppendEntries do
       else
         server.commit_index
       end
-    server
-    |> commit_all_entries_till_commit_index(new_commit_index)
+    server = server
+    |> execute_all_entries_till_commit_index(new_commit_index)
     |> State.commit_index(new_commit_index)
+    server = server
+    |> Debug.commit_entries("Leader #{server.server_num} committed all entries till #{server.commit_index}")
+    server
   end
 
   # DJTODO: IS THIS THE INTENDED BEHAVIOUR?
@@ -88,16 +93,17 @@ defmodule AppendEntries do
     end
   end
 
-  defp append_entries_to_log(server, entries) do
-    Enum.reduce(entries, server, fn {_, entry}, acc ->
-      acc
-      |> Log.append_entry(entry)
-    end)
-  end
+  # defp append_entries_to_log(server, entries) do
+  #   Enum.reduce(entries, server, fn {_, entry}, acc ->
+  #     acc
+  #     |> Log.append_entry(entry)
+  #   end)
+  # end
 
-  defp commit_all_entries_till_commit_index(server, commit_index) do
+  defp execute_all_entries_till_commit_index(server, commit_index) do
     if commit_index > server.commit_index do
       for index_to_commit <- (server.commit_index + 1)..commit_index do
+        Debug.execute_entries(server, "Server #{server.server_num} executes entries from #{server.commit_index + 1} to #{commit_index}")
         send server.databaseP, { :DB_REQUEST, Log.request_at(server, index_to_commit) }
       end
     end
@@ -108,16 +114,18 @@ defmodule AppendEntries do
   defp store_entries(server, prev_log_index, entries, commit_index) do
     server = server
     |> Debug.store_entries("Server #{server.server_num} to store entries #{get_string_entries(entries)}")
-    |> Log.delete_entries(prev_log_index + 1..Log.last_index(server))
-    server = server |> append_entries_to_log(entries)
+    |> Log.delete_entries_from(prev_log_index + 1)
+    server = server |> Log.merge_entries(entries)
     server = server
     |> Debug.store_entries("After appending entries, resulting log is #{Log.get_log_string(server)}")
-    |> commit_all_entries_till_commit_index(min(commit_index, prev_log_index + map_size(entries)))
+    |> execute_all_entries_till_commit_index(min(commit_index, prev_log_index + map_size(entries)))
     |> State.commit_index(min(commit_index, prev_log_index + map_size(entries)))
+    server = server
+    |> Debug.commit_entries("Server #{server.server_num} committed all entries till #{server.commit_index}")
     { server, prev_log_index + map_size(entries) }
   end
 
-  defp get_string_entries(entries) do
-    inspect Enum.map(entries, fn {_, entry} -> entry.request.cid end)
+  def get_string_entries(entries) do
+    inspect Enum.map(entries, fn {_, entry} -> entry.request.cmd end)
   end
 end # AppendEntries

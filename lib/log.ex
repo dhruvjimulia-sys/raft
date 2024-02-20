@@ -48,7 +48,7 @@ end
 @spec get_log_string(any()) :: binary()
 def get_log_string(server) do
   inspect Enum.map(Log.get_entries_from(server, 1), fn {_, entry} ->
-    entry.request.cid
+    entry.request.cmd
   end)
 end
 
