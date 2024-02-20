@@ -40,6 +40,7 @@ end
 # DJTODO: next_index should be updated here!
 def send_append_entries_req(server, followerP) do
   last_log_index = server.next_index[followerP] - 1
+  server = server |> State.next_index(followerP, Log.last_index(server) + 1)
   last_log_term =
     if last_log_index > 0 do
       Log.term_at(server, last_log_index)

@@ -39,8 +39,8 @@ def initialise(config, server_num, servers, databaseP) do
     commit_index: 0,                  # index of highest committed entry in server's log
     last_applied: 0,                  # index of last entry applied to state machine of server
 
-    next_index:   Map.new,            # foreach follower, index of follower's last known entry+1 - used by leader
-    match_index:  Map.new,            # index of highest entry known to be replicated at a follower
+    next_index:   Map.new(servers, fn s -> {s, 1} end), # foreach follower, index of follower's last known entry+1 - used by leader
+    match_index:  Map.new(servers, fn s -> {s, 0} end), # index of highest entry known to be replicated at a follower
   }
 end # initialise
 

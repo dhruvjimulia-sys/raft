@@ -7,7 +7,6 @@ defmodule ClientRequest do
     if server.role == :LEADER do
       duplicate = Enum.find(server.log, fn entry -> entry.cid == client_req.cid end)
       if duplicate do
-        send client_req.clientP, { :CLIENT_REPLY, %{cid: client_req.cid, reply: duplicate, leaderP: server.leaderP} }
         server
       else
         server
@@ -22,7 +21,7 @@ defmodule ClientRequest do
 
   # DJTODO: Why db_result.reply??? Why not just db_result?
   def return_db_result(server, db_result) do
-    send db_result.clientP, { :CLIENT_REPLY, %{cid: db_result.cid, reply: db_result.reply, leaderP: server.leaderP} }
+    send db_result.clientP, { :CLIENT_REPLY, %{cid: db_result.cid, reply: db_result, leaderP: server.leaderP} }
     server
   end
 
