@@ -2,7 +2,6 @@
 # distributed algorithms, n.dulay, 14 jan 2024
 # coursework, raft consensus, v2
 
-
 defmodule ClientRequest do
   def process_client_request(server, client_req) do
     if server.role == :LEADER do
@@ -16,12 +15,12 @@ defmodule ClientRequest do
         |> ServerLib.send_append_entries_to_all_servers_except_myself
       end
     else
-      # DJQUES: client_req, and not client_command?
       send client_req.clientP, { :CLIENT_REPLY, %{cid: client_req.cid, reply: :NOT_LEADER, leaderP: server.leaderP} }
       server
     end
   end
 
+  # DJTODO: Why db_result.reply??? Why not just db_result?
   def return_db_result(server, db_result) do
     send db_result.clientP, { :CLIENT_REPLY, %{cid: db_result.cid, reply: db_result.reply, leaderP: server.leaderP} }
     server

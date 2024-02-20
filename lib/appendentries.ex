@@ -28,7 +28,7 @@ defmodule AppendEntries do
     end
   end
 
-  # DJQUES: ELSE IF: FIRST PART OF CONDITION <=????
+  # What about match_index in the else case below?
   def process_append_entries_reply(server, reply) do
     if reply.term < server.curr_term or !(server.role == :LEADER) do
       server
@@ -79,7 +79,8 @@ defmodule AppendEntries do
           acc
         end
     end
-    # DJQUES: WHAT DOES THIS RETURN? COUNT UNUSED?
+    count >= server.majority
+    # DJTODO: IS THIS THE INTENDED BEHAVIOUR?
   end
 
   defp get_agreed_indexes(server) do
@@ -88,7 +89,24 @@ defmodule AppendEntries do
     end
   end
 
+  defp append_entries_to_log(server, entries) do
+    Enum.reduce(entries, server, fn entry, acc ->
+      Log.append_entry(acc, entry)
+    end)
+  end
+
+  defp commit_all_entries_in_range(server, range) do
+    for index_to_commit <- range do
+      send server.databaseP, { :DB_REQUEST, Log.entry_at(server, index_to_commit) }
+    end
+  end
+
   defp store_entries(server, prev_log_index, entries, commit_index) do
-    # TODO!!!
+    server = server
+    |> Log.delete_entries(prev_log_index + 1..Log.last_index(server))
+    |> append_entries_to_log(entries)
+    |> State.commit_index(min(commit_index, prev_log_index + map_size(entries)))
+    |> commit_all_entries_in_range(server.commit_index..commit_index)
+    { server, prev_log_index + map_size(entries) }
   end
 end # AppendEntries
