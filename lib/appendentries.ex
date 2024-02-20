@@ -91,7 +91,6 @@ defmodule AppendEntries do
   defp append_entries_to_log(server, entries) do
     Enum.reduce(entries, server, fn {_, entry}, acc ->
       acc
-      |> Debug.appended_entry("Server #{acc.server_num} appended #{inspect entry.request.cid} (append entries)")
       |> Log.append_entry(entry)
     end)
   end
@@ -108,13 +107,17 @@ defmodule AppendEntries do
   # TODO: cannot pipeline the following!!! keep it as it is!!
   defp store_entries(server, prev_log_index, entries, commit_index) do
     server = server
-    |> Debug.store_entries("Server #{server.server_num} to store entries #{inspect entries}")
+    |> Debug.store_entries("Server #{server.server_num} to store entries #{get_string_entries(entries)}")
     |> Log.delete_entries(prev_log_index + 1..Log.last_index(server))
     server = server |> append_entries_to_log(entries)
     server = server
-    |> Debug.appended_entry("After appending entries, resulting log is #{inspect Log.get_entries_from(server, 1)}")
+    |> Debug.store_entries("After appending entries, resulting log is #{Log.get_log_string(server)}")
     |> commit_all_entries_till_commit_index(min(commit_index, prev_log_index + map_size(entries)))
     |> State.commit_index(min(commit_index, prev_log_index + map_size(entries)))
     { server, prev_log_index + map_size(entries) }
+  end
+
+  defp get_string_entries(entries) do
+    inspect Enum.map(entries, fn {_, entry} -> entry.request.cid end)
   end
 end # AppendEntries
