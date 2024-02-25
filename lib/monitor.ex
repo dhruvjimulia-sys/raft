@@ -77,7 +77,7 @@ def next(monitor) do
     sorted = monitor.updates  |> Map.to_list |> List.keysort(0)
     IO.puts "  time = #{clock}       db updates done = #{inspect sorted}"
     total_db_updates = Enum.sum(Map.values(monitor.updates))
-    IO.puts "  time = #{clock} db updates avg throughput = #{total_db_updates / clock} updates/ms"
+    IO.puts "  time = #{clock} db updates avg throughput = #{Float.round(total_db_updates / clock, 3)} updates/ms"
 
 
     # if m.config.debug_level == 0 do

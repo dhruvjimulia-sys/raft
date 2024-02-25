@@ -1,0 +1,254 @@
+mix compile
+Compiling 1 file (.ex)
+-------------------------------------------------------------------
+  time = 1000  client requests seen = [{4, 654}]
+  time = 1000       db updates done = [{1, 651}, {2, 651}, {3, 651}, {4, 651}, {5, 651}]
+  time = 1000 db updates avg throughput = 3.255 updates/ms
+
+  time = 2000  client requests seen = [{4, 1191}]
+  time = 2000       db updates done = [{1, 1189}, {2, 1189}, {3, 1189}, {4, 1189}, {5, 1189}]
+  time = 2000 db updates avg throughput = 2.973 updates/ms
+
+  time = 3000  client requests seen = [{4, 1546}]
+  time = 3000       db updates done = [{1, 1544}, {2, 1544}, {3, 1544}, {4, 1544}, {5, 1544}]
+  time = 3000 db updates avg throughput = 2.573 updates/ms
+
+  time = 4000  client requests seen = [{4, 1820}]
+  time = 4000       db updates done = [{1, 1816}, {2, 1816}, {3, 1816}, {4, 1818}, {5, 1816}]
+  time = 4000 db updates avg throughput = 2.271 updates/ms
+
+  time = 5000  client requests seen = [{4, 2074}]
+  time = 5000       db updates done = [{1, 2069}, {2, 2069}, {3, 2069}, {4, 2073}, {5, 2069}]
+  time = 5000 db updates avg throughput = 2.07 updates/ms
+
+  time = 6000  client requests seen = [{4, 2245}]
+  time = 6000       db updates done = [{1, 2241}, {2, 2241}, {3, 2241}, {4, 2244}, {5, 2241}]
+  time = 6000 db updates avg throughput = 1.868 updates/ms
+
+  time = 7000  client requests seen = [{4, 2436}]
+  time = 7000       db updates done = [{1, 2432}, {2, 2432}, {3, 2432}, {4, 2432}, {5, 2432}]
+  time = 7000 db updates avg throughput = 1.737 updates/ms
+
+  time = 8000  client requests seen = [{4, 2635}]
+  time = 8000       db updates done = [{1, 2630}, {2, 2630}, {3, 2630}, {4, 2631}, {5, 2630}]
+  time = 8000 db updates avg throughput = 1.644 updates/ms
+
+  time = 9000  client requests seen = [{4, 2826}]
+  time = 9000       db updates done = [{1, 2821}, {2, 2821}, {3, 2821}, {4, 2826}, {5, 2821}]
+  time = 9000 db updates avg throughput = 1.568 updates/ms
+
+  time = 10000  client requests seen = [{4, 3017}]
+  time = 10000       db updates done = [{1, 3013}, {2, 3013}, {3, 3013}, {4, 3015}, {5, 3013}]
+  time = 10000 db updates avg throughput = 1.507 updates/ms
+
+  time = 11000  client requests seen = [{4, 3179}]
+  time = 11000       db updates done = [{1, 3175}, {2, 3175}, {3, 3175}, {4, 3176}, {5, 3175}]
+  time = 11000 db updates avg throughput = 1.443 updates/ms
+
+  time = 12000  client requests seen = [{4, 3350}]
+  time = 12000       db updates done = [{1, 3345}, {2, 3345}, {3, 3345}, {4, 3346}, {5, 3345}]
+  time = 12000 db updates avg throughput = 1.394 updates/ms
+
+  time = 13000  client requests seen = [{4, 3502}]
+  time = 13000       db updates done = [{1, 3500}, {2, 3498}, {3, 3500}, {4, 3500}, {5, 3500}]
+  time = 13000 db updates avg throughput = 1.346 updates/ms
+
+  time = 14000  client requests seen = [{4, 3668}]
+  time = 14000       db updates done = [{1, 3663}, {2, 3663}, {3, 3663}, {4, 3664}, {5, 3663}]
+  time = 14000 db updates avg throughput = 1.308 updates/ms
+
+  time = 15000  client requests seen = [{4, 3822}]
+  time = 15000       db updates done = [{1, 3817}, {2, 3817}, {3, 3817}, {4, 3819}, {5, 3817}]
+  time = 15000 db updates avg throughput = 1.272 updates/ms
+
+  time = 16000  client requests seen = [{4, 3953}]
+  time = 16000       db updates done = [{1, 3949}, {2, 3949}, {3, 3949}, {4, 3951}, {5, 3949}]
+  time = 16000 db updates avg throughput = 1.234 updates/ms
+
+  time = 17000  client requests seen = [{4, 4098}]
+  time = 17000       db updates done = [{1, 4093}, {2, 4093}, {3, 4093}, {4, 4096}, {5, 4093}]
+  time = 17000 db updates avg throughput = 1.204 updates/ms
+
+  time = 18000  client requests seen = [{4, 4227}]
+  time = 18000       db updates done = [{1, 4222}, {2, 4222}, {3, 4222}, {4, 4226}, {5, 4222}]
+  time = 18000 db updates avg throughput = 1.173 updates/ms
+
+  time = 19000  client requests seen = [{4, 4348}]
+  time = 19000       db updates done = [{1, 4343}, {2, 4343}, {3, 4343}, {4, 4348}, {5, 4343}]
+  time = 19000 db updates avg throughput = 1.143 updates/ms
+
+  time = 20000  client requests seen = [{4, 4484}]
+  time = 20000       db updates done = [{1, 4479}, {2, 4479}, {3, 4479}, {4, 4480}, {5, 4479}]
+  time = 20000 db updates avg throughput = 1.12 updates/ms
+
+  time = 21000  client requests seen = [{4, 4609}]
+  time = 21000       db updates done = [{1, 4607}, {2, 4607}, {3, 4605}, {4, 4607}, {5, 4605}]
+  time = 21000 db updates avg throughput = 1.097 updates/ms
+
+  time = 22000  client requests seen = [{4, 4719}]
+  time = 22000       db updates done = [{1, 4717}, {2, 4717}, {3, 4717}, {4, 4717}, {5, 4717}]
+  time = 22000 db updates avg throughput = 1.072 updates/ms
+
+  time = 23000  client requests seen = [{4, 4813}]
+  time = 23000       db updates done = [{1, 4808}, {2, 4808}, {3, 4808}, {4, 4811}, {5, 4808}]
+  time = 23000 db updates avg throughput = 1.045 updates/ms
+
+  time = 24000  client requests seen = [{4, 4918}]
+  time = 24000       db updates done = [{1, 4915}, {2, 4915}, {3, 4915}, {4, 4915}, {5, 4915}]
+  time = 24000 db updates avg throughput = 1.024 updates/ms
+
+  time = 25000  client requests seen = [{4, 5021}]
+  time = 25000       db updates done = [{1, 5016}, {2, 5016}, {3, 5016}, {4, 5019}, {5, 5016}]
+  time = 25000 db updates avg throughput = 1.003 updates/ms
+
+  time = 26000  client requests seen = [{4, 5110}]
+  time = 26000       db updates done = [{1, 5105}, {2, 5105}, {3, 5105}, {4, 5109}, {5, 5105}]
+  time = 26000 db updates avg throughput = 0.982 updates/ms
+
+  time = 27000  client requests seen = [{4, 5204}]
+  time = 27000       db updates done = [{1, 5199}, {2, 5199}, {3, 5199}, {4, 5200}, {5, 5199}]
+  time = 27000 db updates avg throughput = 0.963 updates/ms
+
+  time = 28000  client requests seen = [{4, 5294}]
+  time = 28000       db updates done = [{1, 5289}, {2, 5289}, {3, 5289}, {4, 5294}, {5, 5289}]
+  time = 28000 db updates avg throughput = 0.945 updates/ms
+
+  time = 29000  client requests seen = [{4, 5380}]
+  time = 29000       db updates done = [{1, 5375}, {2, 5375}, {3, 5375}, {4, 5380}, {5, 5375}]
+  time = 29000 db updates avg throughput = 0.927 updates/ms
+
+  time = 30000  client requests seen = [{4, 5480}]
+  time = 30000       db updates done = [{1, 5475}, {2, 5475}, {3, 5475}, {4, 5476}, {5, 5475}]
+  time = 30000 db updates avg throughput = 0.913 updates/ms
+
+  time = 31000  client requests seen = [{4, 5560}]
+  time = 31000       db updates done = [{1, 5555}, {2, 5555}, {3, 5555}, {4, 5560}, {5, 5555}]
+  time = 31000 db updates avg throughput = 0.896 updates/ms
+
+  time = 32000  client requests seen = [{4, 5642}]
+  time = 32000       db updates done = [{1, 5635}, {2, 5635}, {3, 5635}, {4, 5640}, {5, 5635}]
+  time = 32000 db updates avg throughput = 0.881 updates/ms
+
+  time = 33000  client requests seen = [{4, 5724}]
+  time = 33000       db updates done = [{1, 5719}, {2, 5719}, {3, 5719}, {4, 5720}, {5, 5719}]
+  time = 33000 db updates avg throughput = 0.867 updates/ms
+
+  time = 34000  client requests seen = [{4, 5791}]
+  time = 34000       db updates done = [{1, 5786}, {2, 5786}, {3, 5786}, {4, 5786}, {5, 5786}]
+  time = 34000 db updates avg throughput = 0.851 updates/ms
+
+  time = 35000  client requests seen = [{4, 5838}]
+  time = 35000       db updates done = [{1, 5833}, {2, 5833}, {3, 5833}, {4, 5837}, {5, 5833}]
+  time = 35000 db updates avg throughput = 0.833 updates/ms
+
+  time = 36000  client requests seen = [{4, 5888}]
+  time = 36000       db updates done = [{1, 5883}, {2, 5883}, {3, 5883}, {4, 5884}, {5, 5883}]
+  time = 36000 db updates avg throughput = 0.817 updates/ms
+
+  time = 37000  client requests seen = [{4, 5940}]
+  time = 37000       db updates done = [{1, 5935}, {2, 5935}, {3, 5935}, {4, 5940}, {5, 5935}]
+  time = 37000 db updates avg throughput = 0.802 updates/ms
+
+  time = 38000  client requests seen = [{4, 6002}]
+  time = 38000       db updates done = [{1, 5997}, {2, 5997}, {3, 5997}, {4, 5997}, {5, 5997}]
+  time = 38000 db updates avg throughput = 0.789 updates/ms
+
+  time = 39000  client requests seen = [{4, 6055}]
+  time = 39000       db updates done = [{1, 6050}, {2, 6050}, {3, 6050}, {4, 6052}, {5, 6050}]
+  time = 39000 db updates avg throughput = 0.776 updates/ms
+
+  time = 40000  client requests seen = [{4, 6122}]
+  time = 40000       db updates done = [{1, 6117}, {2, 6117}, {3, 6117}, {4, 6120}, {5, 6117}]
+  time = 40000 db updates avg throughput = 0.765 updates/ms
+
+  time = 41000  client requests seen = [{4, 6181}]
+  time = 41000       db updates done = [{1, 6178}, {2, 6178}, {3, 6178}, {4, 6179}, {5, 6178}]
+  time = 41000 db updates avg throughput = 0.753 updates/ms
+
+  time = 42000  client requests seen = [{4, 6245}]
+  time = 42000       db updates done = [{1, 6240}, {2, 6240}, {3, 6240}, {4, 6241}, {5, 6240}]
+  time = 42000 db updates avg throughput = 0.743 updates/ms
+
+  time = 43000  client requests seen = [{4, 6305}]
+  time = 43000       db updates done = [{1, 6300}, {2, 6300}, {3, 6300}, {4, 6300}, {5, 6300}]
+  time = 43000 db updates avg throughput = 0.733 updates/ms
+
+  time = 44000  client requests seen = [{4, 6363}]
+  time = 44000       db updates done = [{1, 6358}, {2, 6358}, {3, 6358}, {4, 6361}, {5, 6358}]
+  time = 44000 db updates avg throughput = 0.723 updates/ms
+
+  time = 45000  client requests seen = [{4, 6433}]
+  time = 45000       db updates done = [{1, 6428}, {2, 6428}, {3, 6428}, {4, 6428}, {5, 6428}]
+  time = 45000 db updates avg throughput = 0.714 updates/ms
+
+  time = 46000  client requests seen = [{4, 6492}]
+  time = 46000       db updates done = [{1, 6487}, {2, 6487}, {3, 6487}, {4, 6488}, {5, 6487}]
+  time = 46000 db updates avg throughput = 0.705 updates/ms
+
+  time = 47000  client requests seen = [{4, 6561}]
+  time = 47000       db updates done = [{1, 6557}, {2, 6557}, {3, 6557}, {4, 6560}, {5, 6557}]
+  time = 47000 db updates avg throughput = 0.698 updates/ms
+
+  time = 48000  client requests seen = [{4, 6631}]
+  time = 48000       db updates done = [{1, 6629}, {2, 6629}, {3, 6629}, {4, 6630}, {5, 6629}]
+  time = 48000 db updates avg throughput = 0.691 updates/ms
+
+  time = 49000  client requests seen = [{4, 6700}]
+  time = 49000       db updates done = [{1, 6695}, {2, 6695}, {3, 6695}, {4, 6697}, {5, 6695}]
+  time = 49000 db updates avg throughput = 0.683 updates/ms
+
+  time = 50000  client requests seen = [{4, 6772}]
+  time = 50000       db updates done = [{1, 6769}, {2, 6769}, {3, 6769}, {4, 6770}, {5, 6769}]
+  time = 50000 db updates avg throughput = 0.677 updates/ms
+
+  time = 51000  client requests seen = [{4, 6845}]
+  time = 51000       db updates done = [{1, 6841}, {2, 6841}, {3, 6841}, {4, 6842}, {5, 6841}]
+  time = 51000 db updates avg throughput = 0.671 updates/ms
+
+  time = 52000  client requests seen = [{4, 6915}]
+  time = 52000       db updates done = [{1, 6910}, {2, 6910}, {3, 6910}, {4, 6912}, {5, 6910}]
+  time = 52000 db updates avg throughput = 0.664 updates/ms
+
+  time = 53000  client requests seen = [{4, 6984}]
+  time = 53000       db updates done = [{1, 6979}, {2, 6979}, {3, 6979}, {4, 6982}, {5, 6979}]
+  time = 53000 db updates avg throughput = 0.658 updates/ms
+
+  time = 54000  client requests seen = [{4, 7055}]
+  time = 54000       db updates done = [{1, 7051}, {2, 7051}, {3, 7052}, {4, 7053}, {5, 7052}]
+  time = 54000 db updates avg throughput = 0.653 updates/ms
+
+  time = 55000  client requests seen = [{4, 7125}]
+  time = 55000       db updates done = [{1, 7120}, {2, 7120}, {3, 7120}, {4, 7121}, {5, 7120}]
+  time = 55000 db updates avg throughput = 0.647 updates/ms
+
+  time = 56000  client requests seen = [{4, 7195}]
+  time = 56000       db updates done = [{1, 7186}, {2, 7190}, {3, 7186}, {4, 7190}, {5, 7190}]
+  time = 56000 db updates avg throughput = 0.642 updates/ms
+
+  time = 57000  client requests seen = [{4, 7259}]
+  time = 57000       db updates done = [{1, 7254}, {2, 7254}, {3, 7254}, {4, 7254}, {5, 7254}]
+  time = 57000 db updates avg throughput = 0.636 updates/ms
+
+  time = 58000  client requests seen = [{4, 7320}]
+  time = 58000       db updates done = [{1, 7315}, {2, 7315}, {3, 7315}, {4, 7319}, {5, 7315}]
+  time = 58000 db updates avg throughput = 0.631 updates/ms
+
+  Node client4_57_dhruv@127.0.0.1 exiting - maxtime reached
+  Node server1_57_dhruv@127.0.0.1 exiting - maxtime reached
+  Node client2_57_dhruv@127.0.0.1 exiting - maxtime reached
+  Node server3_57_dhruv@127.0.0.1 exiting - maxtime reached
+  Node server2_57_dhruv@127.0.0.1 exiting - maxtime reached
+  Node server5_57_dhruv@127.0.0.1 exiting - maxtime reached
+  Node client1_57_dhruv@127.0.0.1 exiting - maxtime reached
+  Node client3_57_dhruv@127.0.0.1 exiting - maxtime reached
+  Node client5_57_dhruv@127.0.0.1 exiting - maxtime reached
+  Node server4_57_dhruv@127.0.0.1 exiting - maxtime reached
+  time = 59000  client requests seen = [{4, 7377}]
+  time = 59000       db updates done = [{1, 7373}, {2, 7373}, {3, 7373}, {4, 7375}, {5, 7373}]
+  time = 59000 db updates avg throughput = 0.625 updates/ms
+
+  Node flooding_57_dhruv@127.0.0.1 exiting - maxtime reached
+  time = 60000  client requests seen = [{4, 7408}]
+  time = 60000       db updates done = [{1, 7396}, {2, 7404}, {3, 7404}, {4, 7405}, {5, 7405}]
+  time = 60000 db updates avg throughput = 0.617 updates/ms
+
