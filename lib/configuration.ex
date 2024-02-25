@@ -90,12 +90,32 @@ def params :leader_crash do
   }
 end
 
-# _________________________________________________________ params :testing_XX
 def params :repeated_crashing_leaders do
   Map.merge (params :default),
   %{
     crash_leaders_after: 3_000,
     repeated_crashing_leaders: true
+  }
+end
+
+def params :election_timeout_one do
+  Map.merge (params :default),
+  %{
+    election_timeout_range: 100..500,
+  }
+end
+
+def params :election_timeout_two do
+  Map.merge (params :default),
+  %{
+    election_timeout_range: 500..1000,
+  }
+end
+
+def params :election_timeout_three do
+  Map.merge (params :default),
+  %{
+    election_timeout_range: 1000..5000,
   }
 end
 
