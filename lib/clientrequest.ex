@@ -1,6 +1,7 @@
 
 # distributed algorithms, n.dulay, 14 jan 2024
 # coursework, raft consensus, v2
+# Dhruv Jimulia (dj321) and Adi Prasad (arp21)
 
 defmodule ClientRequest do
   def process_client_request(server, client_req) do

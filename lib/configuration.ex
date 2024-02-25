@@ -1,6 +1,7 @@
 
 # distributed algorithms, n.dulay, 14 jan 2024
 # raft, configuration parameters v2
+# Dhruv Jimulia (dj321) and Adi Prasad (arp21)
 # add repeated_crashing_leaders, per_server_file_logging to config params
 
 defmodule Configuration do

@@ -1,6 +1,7 @@
 
 # distributed algorithms, n.dulay, 14 jan 2024
 # coursework, raft consensus, v2
+# Dhruv Jimulia (dj321) and Adi Prasad (arp21)
 
 defmodule Vote do
   # _________________________________________________________ restart_all_append_entries_timers()
