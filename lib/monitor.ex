@@ -1,6 +1,7 @@
 
 # distributed algorithms, n.dulay, 14 jan 2024
 # coursework, raft consensus, v2
+# add statistics for databse update throughput
 
 defmodule Monitor do
 
@@ -71,9 +72,12 @@ def next(monitor) do
     monitor = monitor |> Monitor.clock(clock)
 
     sorted = monitor.requests |> Map.to_list |> List.keysort(0)
-    IO.puts "  time = #{clock} client requests seen = #{inspect sorted}"
+    IO.puts "  time = #{clock}  client requests seen = #{inspect sorted}"
     sorted = monitor.updates  |> Map.to_list |> List.keysort(0)
-    IO.puts "  time = #{clock}      db updates done = #{inspect sorted}"
+    IO.puts "  time = #{clock}       db updates done = #{inspect sorted}"
+    total_db_updates = Enum.sum(Map.values(monitor.updates))
+    IO.puts "  time = #{clock} db updates avg throughput = #{total_db_updates / clock} updates/ms"
+
 
     # if m.config.debug_level == 0 do
     #   min_done   = m.updates  |> Map.values |> Enum.min(fn -> 0 end)

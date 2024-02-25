@@ -92,13 +92,6 @@ defmodule AppendEntries do
     end
   end
 
-  # defp append_entries_to_log(server, entries) do
-  #   Enum.reduce(entries, server, fn {_, entry}, acc ->
-  #     acc
-  #     |> Log.append_entry(entry)
-  #   end)
-  # end
-
   defp execute_all_entries_till_commit_index(server, commit_index) do
     if commit_index > server.commit_index do
       for index_to_commit <- (server.commit_index + 1)..commit_index do
@@ -109,7 +102,6 @@ defmodule AppendEntries do
     server
   end
 
-  # TODO: cannot pipeline the following!!! keep it as it is!!
   defp store_entries(server, prev_log_index, entries, commit_index) do
     server = server
     |> Debug.store_entries("Server #{server.server_num} to store entries #{get_string_entries(entries)}")

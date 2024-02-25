@@ -12,10 +12,6 @@ defmodule Vote do
     server
   end
 
-  # TODO Replace Map.puts by corresponding functions in state.ex
-  # TODO why is timeout_metadata.curr_election required? - edstem
-  # TODO timeout_metadata unused?
-  # TODO Debug.assert(server, server.curr_term == timeout_metadata.curr_term, "Server current term must be the same as the one passed in timeout_metadata")
   def stand_for_election(server, _timeout_metadata) do
     if server.role == :FOLLOWER or server.role == :CANDIDATE do
       server
