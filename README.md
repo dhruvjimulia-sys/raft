@@ -1,6 +1,6 @@
 # Raft
 
-**TODO: Add description**
+All of the interesting experiments done (except those involving only Makefile changes) are recorded in `configuration.ex`, and can be run using the `PARAMS` variable in the Makefile.
 
 ## Installation
 

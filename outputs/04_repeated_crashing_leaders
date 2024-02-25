@@ -1,0 +1,73 @@
+mix compile
+-------------------------------------------------------------------
+  time = 1000  client requests seen = [{5, 598}]
+  time = 1000       db updates done = [{1, 594}, {2, 594}, {3, 594}, {4, 594}, {5, 594}]
+  time = 1000 db updates avg throughput = 2.97 updates/ms
+
+  time = 2000  client requests seen = [{5, 1118}]
+  time = 2000       db updates done = [{1, 1114}, {2, 1114}, {3, 1114}, {4, 1114}, {5, 1115}]
+  time = 2000 db updates avg throughput = 2.785 updates/ms
+
+  time = 3000  client requests seen = [{5, 1516}]
+  time = 3000       db updates done = [{1, 1512}, {2, 1512}, {3, 1512}, {4, 1512}, {5, 1512}]
+  time = 3000 db updates avg throughput = 2.52 updates/ms
+
+  Node server5_10_dhruv@127.0.0.1 exiting - Leader server 5 was killed by KILL_LEADER
+  time = 4000  client requests seen = [{5, 1829}]
+  time = 4000       db updates done = [{1, 1825}, {2, 1825}, {3, 1825}, {4, 1825}, {5, 1829}]
+  time = 4000 db updates avg throughput = 2.282 updates/ms
+
+  time = 5000  client requests seen = [{4, 241}, {5, 1844}]
+  time = 5000       db updates done = [{1, 2082}, {2, 2082}, {3, 2082}, {4, 2084}, {5, 1840}]
+  time = 5000 db updates avg throughput = 2.034 updates/ms
+
+  time = 6000  client requests seen = [{4, 519}, {5, 1844}]
+  time = 6000       db updates done = [{1, 2360}, {2, 2360}, {3, 2360}, {4, 2360}, {5, 1840}]
+  time = 6000 db updates avg throughput = 1.88 updates/ms
+
+  Node server4_10_dhruv@127.0.0.1 exiting - Leader server 4 was killed by KILL_LEADER
+  time = 7000  client requests seen = [{4, 768}, {5, 1844}]
+  time = 7000       db updates done = [{1, 2606}, {2, 2606}, {3, 2606}, {4, 2610}, {5, 1840}]
+  time = 7000 db updates avg throughput = 1.753 updates/ms
+
+  time = 8000  client requests seen = [{3, 168}, {4, 770}, {5, 1844}]
+  time = 8000       db updates done = [{1, 2777}, {2, 2777}, {3, 2780}, {4, 2612}, {5, 1840}]
+  time = 8000 db updates avg throughput = 1.598 updates/ms
+
+  time = 9000  client requests seen = [{3, 395}, {4, 770}, {5, 1844}]
+  time = 9000       db updates done = [{1, 3004}, {2, 3004}, {3, 3009}, {4, 2612}, {5, 1840}]
+  time = 9000 db updates avg throughput = 1.497 updates/ms
+
+  Node server3_10_dhruv@127.0.0.1 exiting - Leader server 3 was killed by KILL_LEADER
+  time = 10000  client requests seen = [{3, 652}, {4, 770}, {5, 1844}]
+  time = 10000       db updates done = [{1, 3261}, {2, 3261}, {3, 3263}, {4, 2612}, {5, 1840}]
+  time = 10000 db updates avg throughput = 1.424 updates/ms
+
+  time = 11000  client requests seen = [{3, 657}, {4, 770}, {5, 1844}]
+  time = 11000       db updates done = [{1, 3266}, {2, 3266}, {3, 3266}, {4, 2612}, {5, 1840}]
+  time = 11000 db updates avg throughput = 1.295 updates/ms
+
+  time = 12000  client requests seen = [{3, 657}, {4, 770}, {5, 1844}]
+  time = 12000       db updates done = [{1, 3266}, {2, 3266}, {3, 3266}, {4, 2612}, {5, 1840}]
+  time = 12000 db updates avg throughput = 1.188 updates/ms
+
+  time = 13000  client requests seen = [{3, 657}, {4, 770}, {5, 1844}]
+  time = 13000       db updates done = [{1, 3266}, {2, 3266}, {3, 3266}, {4, 2612}, {5, 1840}]
+  time = 13000 db updates avg throughput = 1.096 updates/ms
+
+  Node server2_10_dhruv@127.0.0.1 exiting - maxtime reached
+  Node client3_10_dhruv@127.0.0.1 exiting - maxtime reached
+  Node client4_10_dhruv@127.0.0.1 exiting - maxtime reached
+  Node client1_10_dhruv@127.0.0.1 exiting - maxtime reached
+  Node server1_10_dhruv@127.0.0.1 exiting - maxtime reached
+  Node client5_10_dhruv@127.0.0.1 exiting - maxtime reached
+  Node client2_10_dhruv@127.0.0.1 exiting - maxtime reached
+  time = 14000  client requests seen = [{3, 657}, {4, 770}, {5, 1844}]
+  time = 14000       db updates done = [{1, 3266}, {2, 3266}, {3, 3266}, {4, 2612}, {5, 1840}]
+  time = 14000 db updates avg throughput = 1.018 updates/ms
+
+  Node flooding_10_dhruv@127.0.0.1 exiting - maxtime reached
+  time = 15000  client requests seen = [{3, 657}, {4, 770}, {5, 1844}]
+  time = 15000       db updates done = [{1, 3266}, {2, 3266}, {3, 3266}, {4, 2612}, {5, 1840}]
+  time = 15000 db updates avg throughput = 0.95 updates/ms
+

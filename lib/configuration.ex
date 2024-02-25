@@ -73,15 +73,31 @@ end # params :default
 
 # add further params functions for your own tests and experiments
 
-# _________________________________________________________ params :testing_XX
-def params :testing_XX do
+def params :server_one_crash do
   Map.merge (params :default),
   %{
-    # omitted
+    crash_servers: %{
+      1 => 5_000
+    }
   }
-end # params :testing_XX
+end
 
-# etc ..
+def params :leader_crash do
+  Map.merge (params :default),
+  %{
+    crash_leaders_after: 5_000,
+    repeated_crashing_leaders: false
+  }
+end
+
+# _________________________________________________________ params :testing_XX
+def params :repeated_crashing_leaders do
+  Map.merge (params :default),
+  %{
+    crash_leaders_after: 3_000,
+    repeated_crashing_leaders: true
+  }
+end
 
 end # Configuration
 
