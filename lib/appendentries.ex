@@ -13,7 +13,6 @@ defmodule AppendEntries do
       { server, index } =
         if success do
           server
-          # |> Debug.print("PrevIndex: #{request.prev_log_index}, Entries: #{get_string_entries(request.entries)}, CommitIndex: #{request.commit_index}")
           |> store_entries(request.prev_log_index, request.entries, request.commit_index)
         else
           {server, 0}

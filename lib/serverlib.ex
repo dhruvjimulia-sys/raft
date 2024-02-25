@@ -70,7 +70,7 @@ end
 def kill_if_leader(server) do
   if server.role == :LEADER do
     kill_leader_log = "Leader server #{server.server_num} was killed by KILL_LEADER"
-    Debug.print(server, kill_leader_log)
+    Debug.kill_leader(server, kill_leader_log)
     Helper.node_halt(kill_leader_log)
   else
     if server.config.repeated_crashing_leaders do
@@ -82,7 +82,7 @@ end
 
 def kill_server(server) do
   kill_server_log = "Server #{server.server_num} was killed by KILL_SERVER"
-  Debug.print(server, kill_server_log)
+  Debug.kill_server(server, kill_server_log)
   Helper.node_halt(kill_server_log)
 end
 

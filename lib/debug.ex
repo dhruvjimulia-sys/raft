@@ -104,6 +104,14 @@ def execute_entries(server, message, level \\ 1) do
   server |> Debug.message("executeentries", message, level)
 end
 
+def kill_leader(server, message, level \\ 1) do
+  server |> Debug.message("killleader", message, level)
+end
+
+def kill_server(server, message, level \\ 1) do
+  server |> Debug.message("killserver", message, level)
+end
+
 def sleep(server) do
   Helper.node_sleep("Server #{server.server_num} sleeping")
   server
