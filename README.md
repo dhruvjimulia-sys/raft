@@ -1,21 +1,18 @@
 # Raft
 
-All of the interesting experiments done (except those involving only Makefile changes) are recorded in `configuration.ex`, and can be run using the `PARAMS` variable in the Makefile.
+This is an implementation of the Raft consensus algorithm, in Elixir. 
 
-## Installation
+## Running The Project
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `raft` to your list of dependencies in `mix.exs`:
+Parameters that can be directly configured in the `Makefile` include number of servers, number of clients and time to run the consensus algorithm for. All of the interesting experiments done (involving server crashes, changing election timeouts) are recorded in `configuration.ex`, and can be run using the `PARAMS` variable in the Makefile.
 
-```elixir
-def deps do
-  [
-    {:raft, "~> 0.1.0"}
-  ]
-end
+In order to start running the algorithm, run, in the root directory of the project:
+
+```
+make
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at <https://hexdocs.pm/raft>.
+Details and evaluation of any interesting experiments conducted are included in `report.pdf`. Corresponding outputs for experiments are present in the `outputs` directory.
 
+## Acknowledgements
+Skeleton was provided by Dr. Narenker Dulay, as part of his Imperial College Distributed Algorithms course. Implementation was done jointly by Dhruv Jimulia and Adi Prasad.
